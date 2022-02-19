@@ -2,7 +2,7 @@
   import {ref,reactive, computed} from 'vue'
   import {word} from './word.json'
   
-  const evalueteStatus = ["present","correct","absent"]
+  const evalueteStatus = {"present":"present","correct":"correct","absent":"absent"}
 
   const word1 = word.word1;
   const word2 = word.word2;
@@ -57,10 +57,14 @@
     for(let inputIdx = 0; eleInput< inputWord.value.length; inputIdx++){
       for(let randIdx = 0; eleRand< randomWord.length;randIdx++){
         if(inputWord.value[inputIdx]==randomWord[randIdx]){
-          
+          if(inputIdx== randIdx){
+            return evalueteStatus.correct
+          }
+          return evalueteStatus.present
         }
       }
     }
+    return evalueteStatus.present
   }
 
 
@@ -74,7 +78,7 @@
 
 <div class="flex justify-center ">
   <div class="form-control">
-    <input type="text" placeholder="ENTER YOUR WORD !!" style="text-transform:uppercase" class="input bg-base-200" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
+    <input type="text" placeholder="ENTER YOUR WORD !!" style="text-transform:uppercase" class="text-center input bg-base-200" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
   </div>
 </div>
 
