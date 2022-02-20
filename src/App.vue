@@ -10,7 +10,8 @@
   const randomWord = word1[Math.floor(Math.random()*2315)]
   const inputWord = ref('')
   const round = ref(0)
-  const words = ref([]);
+  const gameIsEnd = ref(false)
+  
   const board = reactive([{
     bordState : '',
     evalution : []
@@ -35,38 +36,70 @@
     bordState : '',
     evalution : []
     }])
+
+  const words = computed(()=>{
+    const wordList = []
+    for (const wb of board){
+      if(wb.bordState!=='')
+      {wordList.push(...wb.bordState.split(""))}
+    }
+    return wordList;
+  })
+
+  const evalutes = computed(()=>{
+    const evaluteList = []
+    for (const eb of board){
+      if(eb.evalution!=='')
+      {evaluteList.push(...eb.evalution)}
+    }
+    return evaluteList;
+  })
+
   console.log(randomWord);
   const checkInput = () => {
-    if(round.value==6){return console.log('You Lose');}
     if(randomWord==inputWord.value.toLowerCase()){
-      return console.log(`round:${round.value} You WIN`);
-    }
-    if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
-
-      board[round.value].bordState = inputWord.value;
-      words.value.push(...board[round.value].bordState.split(""))
+      setWord()
       round.value++
-      return console.log(`${round.value} Try Again`)
+      console.log('you win')
+      gameIsEnd.value=true;
+    }
+    else if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
+      setWord()
+      round.value++
+      console.log(`${round.value} Try Again`)
     }
     else {
-      return console.log(`${round.value} don't have this word`);
+      setWord()
+      console.log(`${round.value} don't have this word`)
     }
-    
-  }
-  const checkAnswer = () => {
-    for(let inputIdx = 0; eleInput< inputWord.value.length; inputIdx++){
-      for(let randIdx = 0; eleRand< randomWord.length;randIdx++){
-        if(inputWord.value[inputIdx]==randomWord[randIdx]){
-          if(inputIdx== randIdx){
-            return evalueteStatus.correct
-          }
-          return evalueteStatus.present
-        }
-      }
-    }
-    return evalueteStatus.present
+    if(round.value==6){gameIsEnd.value=true}
   }
 
+  const checkAnswer = () => {
+    const evaList = []
+    for(let inputIdx = 0; inputIdx< inputWord.value.length; inputIdx++){
+      for(let randIdx = 0; randIdx< randomWord.length;randIdx++){
+        if(inputWord.value[inputIdx]==randomWord[randIdx]){
+          if(inputIdx== randIdx){
+            evaList.push(evalueteStatus.correct)
+          }
+          else{evaList.push(evalueteStatus.present)}
+          break
+        }
+      }
+      if(evaList.length===inputIdx){
+        evaList.push(evalueteStatus.absent)
+        }
+      
+    }
+    return evaList
+  }
+  
+
+  const setWord = () =>{
+    board[round.value].bordState = inputWord.value
+    board[round.value].evalution = checkAnswer()
+  }
 
 </script>
 
@@ -78,13 +111,17 @@
 
 <div class="flex justify-center ">
   <div class="form-control">
-    <input type="text" placeholder="ENTER YOUR WORD !!" style="text-transform:uppercase" class="text-center input bg-base-200" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
+    <input type="text" placeholder="ENTER YOUR WORD !!" style="text-transform:uppercase" class="text-center input bg-base-200" maxlength="5" v-model="inputWord" @keyup.enter="checkInput" :disabled="gameIsEnd">
   </div>
 </div>
 
 <div class="bg-blue-400 text-blue-400 min-h-screen flex items-center justify-center">
   <div class="grid grid-cols-5 gap-4">
-    <div class="bg-white p-5 rounded list-none uppercase" v-for="boards in words">
+    <div class=" p-5 rounded list-none uppercase"
+    :class="{'bg-white':evalutes[index]==evalueteStatus.absent,
+    'bg-green-300':evalutes[index]==evalueteStatus.correct,
+    'bg-amber-300':evalutes[index]==evalueteStatus.present}"
+    v-for="(boards,index) in words">
     {{ boards }}
     </div>
   </div>
