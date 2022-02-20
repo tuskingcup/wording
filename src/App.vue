@@ -61,7 +61,7 @@
       setWord()
       round.value++
       console.log('you win')
-      gameIsEnd.value=true;
+      gameIsEnd.value=true
     }
     else if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
       setWord()
@@ -78,15 +78,17 @@
   const checkAnswer = () => {
     const evaList = []
     for(let inputIdx = 0; inputIdx< inputWord.value.length; inputIdx++){
-      for(let randIdx = 0; randIdx< randomWord.length;randIdx++){
-        if(inputWord.value[inputIdx]==randomWord[randIdx]){
-          if(inputIdx== randIdx){
-            evaList.push(evalueteStatus.correct)
-          }
-          else{evaList.push(evalueteStatus.present)}
+      if(inputWord.value[inputIdx]===randomWord[inputIdx]){
+        evaList.push(evalueteStatus.correct)
+      }else{
+      for(const rand of randomWord){
+        if(inputWord.value[inputIdx]===rand){
+          evaList.push(evalueteStatus.present)
           break
         }
       }
+      }
+      
       if(evaList.length===inputIdx){
         evaList.push(evalueteStatus.absent)
         }
