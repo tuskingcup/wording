@@ -66,25 +66,29 @@ const evalutes = computed(() => {
 
 console.log(randomWord);
 
+const checkError = ref(false)
+
 const checkInput = () => {
-  if (randomWord == inputWord.value.toLowerCase()) {
+  if (randomWord === inputWord.value.toLowerCase()) {
     setWord();
-    round.value++;
-    console.log('you win');
-    checkWin.value = true;
+    round.value++
+    console.log('you win')
+    checkWin.value = true
+    checkError.value = false
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
   ) {
     setWord();
-    round.value++;
-    console.log(`${round.value} Try Again`);
+    round.value++
+     checkError.value = false
+    console.log(`${round.value} Try Again`)
   } else {
-    setWord();
-    console.log(`${round.value} don't have this word`);
+    checkError.value = true
+    console.log(`${round.value} don't have this word`)
   }
-  if (round.value == 6) {
-    checkLose.value = true;
+  if (round.value === 6 && randomWord !== inputWord.value.toLowerCase()) {
+    checkLose.value = true
   }
 };
 
@@ -123,11 +127,11 @@ const setWord = () => {
       <input
         type="text"
         placeholder="ENTER YOUR WORD !!"
-        :class="['input bg-base-200 uppercase', checkWin === true ? 'pointer-events-none' : '']"
+        class='input bg-base-200 uppercase'
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
-        :readonly="checkWin === true || checkLose === true"
+        :disabled="checkWin === true || checkLose === true"
       />
     </div>
   </div>
@@ -138,15 +142,20 @@ const setWord = () => {
   <div class="m-5 text-red-600">
     <p v-show="checkLose === true">You LOSE!</p>
   </div>
-<div v-show = "checkWin == true || checkLose == true" class="uppercase m-5 bg-"> 
+<div v-show = "checkWin === true || checkLose === true" class="uppercase m-5 "> 
   <p>{{randomWord}}</p>
+  
+  </div>
+  <div v-show="checkError === true" class="m-5">
+  <p class="text-red-600">Don't have this word !</p>
+
   </div>
   <div
     class="bg-blue-400 text-blue-400 min-h-screen flex items-center justify-center"
   >
 
    
- 
+
     <div class="grid grid-cols-5 gap-4">
       
       <div
