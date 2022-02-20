@@ -104,9 +104,9 @@
     round.value = 0
     gameIsEnd.value = false
     randomWord.value = word1[Math.floor(Math.random()*2315)]
-    // console.log(randomWord.value)
-    // console.log(board)
     toggleModal()
+    console.log(randomWord.value)
+    // console.log(board)
   }
 
   function toggleModal() {
@@ -120,19 +120,19 @@
 
 <template>
 <div class="animate-pulse font-serif font-bold text-6xl">
-  <h1>WORDLE</h1>
+  <h1 class="mt-10 text-amber-500">WORDLE</h1>
 </div>
 <div class="flex justify-center">
   <div class="form-control">
-    <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center mt-10 uppercase" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
+    <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
   </div>
 </div>
 
 <div class="text-blue-400 flex items-center justify-center mt-10">
   <div class="grid grid-cols-5 gap-4">
-    <div class=" p-5 rounded list-none uppercase"
+    <div class="p-5 rounded list-none uppercase"
     :class="{'bg-white':evalutes[index]==evalueteStatus.absent,
-    'bg-green-300':evalutes[index]==evalueteStatus.correct,
+    'animation-pop bg-green-300':evalutes[index]==evalueteStatus.correct,
     'bg-amber-300':evalutes[index]==evalueteStatus.present}"
     v-for="(boards,index) in words">
     {{ boards }}
@@ -175,5 +175,17 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
+}
+
+.animation-pop {
+  animation: .5s linear popup;
+}
+
+@keyframes popup {
+  0% {transform: scale(1.20);}
+  25% {transform: scale(1.15);}
+  50% {transform: scale(1.10);}
+  75% {transform: scale(1.05);}
+  100% {transform: scale(1.0);}
 }
 </style>
