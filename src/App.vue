@@ -58,6 +58,7 @@
       console.log('you win')
       gameIsEnd.value=true;
       toggleModal();
+      
     }
     else if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
       setWord()
@@ -68,7 +69,7 @@
       console.log(`${round.value} don't have this word`)
     }
     if(round.value==6){gameIsEnd.value=true}
-
+    inputWord.value = ""
   }
   
   const checkAnswer = () => {
@@ -123,7 +124,7 @@
 </div>
 <div class="flex justify-center">
   <div class="form-control">
-    <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
+    <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10 " maxlength="5" v-model="inputWord" @keyup.enter="checkInput" :disabled="gameIsEnd">
   </div>
 </div>
 
@@ -140,7 +141,7 @@
 </div>
 
 
-<div class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden" id="modal">
+<div class="animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0 hidden" id="modal">
   <div class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0">
     <div class="fixed inset-0 transition-opacity">
       <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
