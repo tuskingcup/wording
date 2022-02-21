@@ -8,19 +8,15 @@
   const word2 = word.word2;
   const randomWord = ref(word1[Math.floor(Math.random()*2315)])
   const inputWord = ref('')
-<<<<<<< HEAD
-  let round = 0
-=======
   const round = ref(0)
   const gameIsEnd = ref(gameStatus.progress)
   
->>>>>>> tus
   const board = reactive([{
-    bordState : 'stone',
+    bordState : '',
     evalution : []
     },
     {
-    bordState : 'super',
+    bordState : '',
     evalution : []
     },
     {
@@ -45,13 +41,6 @@
       if(wb.bordState!=='')
       {wordList.push(...wb.bordState.split(""))}
     }
-<<<<<<< HEAD
-    if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
-
-      board[round].bordState = inputWord.value;
-      round++
-      return console.log(`${round} Try Again`)
-=======
     return wordList;
   })
   const evalutes = computed(()=>{
@@ -76,7 +65,6 @@
       setWord()
       round.value++
       console.log(`${round.value} Try Again`)
->>>>>>> tus
     }
     else {
       console.log(`${round.value} don't have this word`)
@@ -141,19 +129,6 @@
 </div>
 <div class="flex justify-center">
   <div class="form-control">
-<<<<<<< HEAD
-    <input type="text" placeholder="ENTER YOUR WORD !!" style="text-transform:uppercase" class="input bg-base-200" maxlength="5" v-model="inputWord" @keyup.enter="checkInput" >
-  </div>
-</div>
-<div class=" flex items-center justify-center m-20">
-  <div class="grid grid-cols-5 gap-4" >
-      <div class="bg-stone-200 p-3 rounded content-center uppercase"  v-for="j in 5">
-      <p>d</p>
-      </div>
-      
-  </div>
-  </div>
-=======
     <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10 " maxlength="5" v-model="inputWord" @keyup.enter="checkInput" :disabled="gameIsEnd!==gameStatus.progress">
   </div>
 </div>
@@ -197,7 +172,6 @@
     </div>
   </div>
 </div>
->>>>>>> tus
 </template>
 
 <style>
