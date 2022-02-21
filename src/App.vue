@@ -66,51 +66,52 @@ const evalutes = computed(() => {
 
 console.log(randomWord);
 
-const checkError = ref(false)
+const checkError = ref(false);
 
 const checkInput = () => {
   if (randomWord === inputWord.value.toLowerCase()) {
     setWord();
-    round.value++
-    console.log('you win')
-    checkWin.value = true
-    checkError.value = false
+    round.value++;
+    console.log('you win');
+    checkWin.value = true;
+    checkError.value = false;
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
   ) {
     setWord();
-    round.value++
-     checkError.value = false
-    console.log(`${round.value} Try Again`)
+    round.value++;
+    checkError.value = false;
+    console.log(`${round.value} Try Again`);
   } else {
-    checkError.value = true
-    console.log(`${round.value} don't have this word`)
+    checkError.value = true;
+    console.log(`${round.value} don't have this word`);
   }
   if (round.value === 6 && randomWord !== inputWord.value.toLowerCase()) {
-    checkLose.value = true
+    checkLose.value = true;
   }
 };
 
 const checkAnswer = () => {
-  const evaList = [];
-  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
-    for (let randIdx = 0; randIdx < randomWord.length; randIdx++) {
-      if (inputWord.value[inputIdx] == randomWord[randIdx]) {
-        if (inputIdx == randIdx) {
-          evaList.push(evalueteStatus.CORRECT);
-        } else {
-          evaList.push(evalueteStatus.PRESENT);
+    const evaList = []
+    for(let inputIdx = 0; inputIdx< inputWord.value.length; inputIdx++){
+      if(inputWord.value[inputIdx]===randomWord[inputIdx]){
+        evaList.push(evalueteStatus.CORRECT)
+      }else{
+      for(const rand of randomWord){
+        if(inputWord.value[inputIdx]===rand){
+          evaList.push(evalueteStatus.PRESENT)
+          break
         }
-        break;
       }
+      }
+      if(evaList.length===inputIdx){
+        evaList.push(evalueteStatus.ABSENT)
+        }
+      
     }
-    if (evaList.length === inputIdx) {
-      evaList.push(evalueteStatus.ABSENT);
-    }
+    return evaList
   }
-  return evaList;
-};
 
 const setWord = () => {
   boards[round.value].bordState = inputWord.value;
@@ -121,13 +122,12 @@ const setWord = () => {
 <template>
   <div class="flex justify-center"></div>
 
-
   <div class="flex justify-center">
     <div class="form-control">
       <input
         type="text"
         placeholder="ENTER YOUR WORD !!"
-        class='input bg-base-200 uppercase'
+        class="input bg-base-200 uppercase"
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
@@ -142,22 +142,16 @@ const setWord = () => {
   <div class="m-5 text-red-600">
     <p v-show="checkLose === true">You LOSE!</p>
   </div>
-<div v-show = "checkWin === true || checkLose === true" class="uppercase m-5 "> 
-  <p>{{randomWord}}</p>
-  
+  <div v-show="checkWin === true || checkLose === true" class="uppercase m-5">
+    <p>{{ randomWord }}</p>
   </div>
   <div v-show="checkError === true" class="m-5">
-  <p class="text-red-600">Don't have this word !</p>
-
+    <p class="text-red-600">Don't have this word !</p>
   </div>
   <div
     class="bg-blue-400 text-blue-400 min-h-screen flex items-center justify-center"
   >
-
-   
-
     <div class="grid grid-cols-5 gap-4">
-      
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
@@ -170,7 +164,6 @@ const setWord = () => {
         {{ boards }}
       </div>
     </div>
-    
   </div>
 </template>
 
