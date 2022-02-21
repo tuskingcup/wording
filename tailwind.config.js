@@ -4,10 +4,6 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-<<<<<<< HEAD
-    extend: {},
-  },
-=======
     extend: {
         keyframes: {
             'fade-in-down': {
@@ -24,6 +20,5 @@ module.exports = {
         }
     },
 },
->>>>>>> b81e84c26ac7d29eaf3908840677c3114d2c0c12
   plugins: [require('daisyui'),],
 }
