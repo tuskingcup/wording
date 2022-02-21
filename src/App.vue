@@ -74,7 +74,6 @@ const checkInput = () => {
     round.value++;
     console.log('you win');
     gameIsEnd.value = gameStatus.win;
-
     toggleModal();
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
@@ -88,10 +87,12 @@ const checkInput = () => {
     gameIsEnd.value = gameStatus.error;
     console.log(`${round.value} don't have this word`);
   }
-  if (round.value == 6) {
+
+  if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
     toggleModal();
   }
+
   inputWord.value = '';
 };
 
@@ -145,7 +146,6 @@ const changeBg = () => {
       ? document.documentElement.setAttribute('data-theme', 'laxury')
       : document.documentElement.setAttribute('data-theme', 'light');
 };
-
 </script>
 
 <template>
@@ -178,8 +178,11 @@ const changeBg = () => {
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
-        :disabled="gameIsEnd === gameStatus.fail"
+        :disabled="
+          gameIsEnd === gameStatus.fail || gameIsEnd === gameStatus.win
+        "
       />
+      <!-- + gameIsEnd === gameStatus.win -->
     </div>
   </div>
 
@@ -192,8 +195,8 @@ const changeBg = () => {
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'border-2 border-gray-200' : isLight === true,
-           'border-2 border-transparent' : isLight === false,
+          'border-2 border-gray-200': isLight === true,
+          'border-2 border-transparent': isLight === false,
           'bg-white': evalutes[index] == evalueteStatus.absent,
           'animation-pop bg-green-300':
             evalutes[index] == evalueteStatus.correct,
@@ -268,7 +271,6 @@ const changeBg = () => {
 .animation-pop {
   animation: 0.5s linear popup;
 }
-
 
 @keyframes popup {
   0% {
