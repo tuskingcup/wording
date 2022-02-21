@@ -54,6 +54,7 @@
     return evaluteList;
   })
   console.log(randomWord.value);
+
   const checkInput = () => {
     if(randomWord.value==inputWord.value.toLowerCase()){
       setWord()
@@ -61,9 +62,7 @@
       console.log('you win')
       checkError.value = false
       gameIsEnd.value=gameStatus.win;
-      
       toggleModal();
-      
     }
     else if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
       setWord()
@@ -75,7 +74,7 @@
       checkError.value = true
       console.log(`${round.value} don't have this word`)
     }
-    if(round.value==6){
+    if(round.value==6 && gameIsEnd.value===gameStatus.progress){
       gameIsEnd.value=gameStatus.fail
       toggleModal();
       }
@@ -131,15 +130,15 @@
 
 <template>
 <div class="animate-pulse font-serif font-bold text-6xl">
-  <h1 class="mt-10 text-amber-500">WORDLE</h1>
+  <p class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-100 to-amber-600">WORDING</p>
 </div>
 <div class="flex justify-center">
   <div class="form-control">
     <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10 " maxlength="5" v-model="inputWord" @keyup.enter="checkInput" :disabled="gameIsEnd!==gameStatus.progress">
   </div>
 </div>
-<div v-show="checkError === true">
-  <p class="text-red-600 m-5">Don't have this word!</p>
+<div class="mt-10" v-show="checkError === true">
+  <p class="animate-bounce text-lg font-bold text-amber-400">Don't have this word!</p>
 </div>
 <div class="text-blue-400 flex items-center justify-center mt-10">
   <div class="grid grid-cols-5 gap-4">
@@ -154,7 +153,7 @@
 </div>
 
 
-<div class="animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0 hidden" id="modal">
+<div class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden" id="modal">
   <div class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0">
     <div class="fixed inset-0 transition-opacity">
       <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
@@ -190,15 +189,30 @@
   color: #2c3e50;
 }
 
+
 .animation-pop {
   animation: .5s linear popup;
 }
 
 @keyframes popup {
-  0% {transform: scale(1.20);}
+  50%  {transform: scale(1.2);}
+  /* 0% {transform: translate(-20%) scale(1.20);}
   25% {transform: scale(1.15);}
   50% {transform: scale(1.10);}
   75% {transform: scale(1.05);}
-  100% {transform: scale(1.0);}
+  100% {transform: translate(0%) scale(1.0);} */
 }
+
+/* .animation-header {
+  width: 100%;
+  height: 50px;    
+  padding: 60px;
+  letter-spacing: 15px;
+  animation: 3s alternate-reverse linear header infinite;
+  -webkit-text-stroke: 2px white;
+}
+
+@keyframes header {
+  50% {font-size: 110%;}
+} */
 </style>
