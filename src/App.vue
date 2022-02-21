@@ -52,10 +52,7 @@
   })
   console.log(randomWord.value);
   const checkInput = () => {
-    if(inputWord.value.length<5){
-      console.log('insert 5 letter word')
-    }
-    else if(randomWord.value==inputWord.value.toLowerCase()){
+    if(randomWord.value==inputWord.value.toLowerCase()){
       setWord()
       round.value++
       console.log('you win')
@@ -68,7 +65,6 @@
       console.log(`${round.value} Try Again`)
     }
     else {
-      setWord()
       console.log(`${round.value} don't have this word`)
     }
     if(round.value==6){gameIsEnd.value=true}
