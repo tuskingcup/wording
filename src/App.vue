@@ -88,7 +88,6 @@
         }
       }
       }
-      
       if(evaList.length===inputIdx){
         evaList.push(evalueteStatus.absent)
         }
