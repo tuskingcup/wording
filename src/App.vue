@@ -3,12 +3,13 @@
   import {word} from './word.json'
   
   const evalueteStatus = {"present":"present","correct":"correct","absent":"absent"}
+  const gameStatus = {"progress":"progress","win":"win","fail":"fail"}
   const word1 = word.word1;
   const word2 = word.word2;
   const randomWord = ref(word1[Math.floor(Math.random()*2315)])
   const inputWord = ref('')
   const round = ref(0)
-  const gameIsEnd = ref(false)
+  const gameIsEnd = ref(gameStatus.progress)
   
   const board = reactive([{
     bordState : '',
@@ -56,7 +57,7 @@
       setWord()
       round.value++
       console.log('you win')
-      gameIsEnd.value=true;
+      gameIsEnd.value=gameStatus.win;
       toggleModal();
       
     }
@@ -68,8 +69,12 @@
     else {
       console.log(`${round.value} don't have this word`)
     }
-    if(round.value==6){gameIsEnd.value=true}
+    if(round.value==6){
+      gameIsEnd.value=gameStatus.fail
+      toggleModal();
+      }
     inputWord.value = ""
+    
   }
   
   const checkAnswer = () => {
@@ -104,7 +109,7 @@
       e.evalution = []
     })
     round.value = 0
-    gameIsEnd.value = false
+    gameIsEnd.value = gameStatus.progress
     randomWord.value = word1[Math.floor(Math.random()*2315)]
     toggleModal()
     console.log(randomWord.value)
@@ -124,7 +129,7 @@
 </div>
 <div class="flex justify-center">
   <div class="form-control">
-    <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10 " maxlength="5" v-model="inputWord" @keyup.enter="checkInput" :disabled="gameIsEnd">
+    <input type="text" placeholder="ENTER YOUR WORD !!" class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10 " maxlength="5" v-model="inputWord" @keyup.enter="checkInput" :disabled="gameIsEnd!==gameStatus.progress">
   </div>
 </div>
 
@@ -149,7 +154,7 @@
     <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
     <div class="inline-block align-center bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
       <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
-        <h1 class="text-3xl text-center uppercase mt-5">congratulations !!</h1>
+        <h1 class="text-3xl text-center uppercase mt-5">{{gameIsEnd===gameStatus.win?`congratulations !!`:`You Fail`}}</h1>
         <p class="text-center uppercase mt-4">Answer : <strong>{{ randomWord }}</strong></p>
       </div>
       <div class="bg-gray-200 px-4 py-3 text-right">
