@@ -157,7 +157,7 @@ const checkTheme = ref(false)
     <button data-toggle-theme="dark,light" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
       <img
         class="h-8"
-        :src="checkTheme === true ? iconSunMoon. moon : iconSunMoon.sun"
+        :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
       />
     </button>
   </div>
@@ -188,8 +188,8 @@ const checkTheme = ref(false)
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'border-2 border-gray-200': isLight === true,
-          'border-2 border-transparent': isLight === false,
+          'border-2 border-gray-200': checkTheme === true,
+          'border-2 border-transparent': checkTheme === false,
           'bg-white': evalutes[index] == evalueteStatus.absent,
           'animation-pop bg-green-300':
             evalutes[index] == evalueteStatus.correct,
