@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed} from 'vue';
 import { word } from './word.json';
 
 const evalueteStatus = {
@@ -139,11 +139,13 @@ const showModal = ref(false)
 
 
 const iconSunMoon = {
-  sun: '/public/sun.png',
-  moon: '/public/moon.png',
+  sun: '/sun.png',
+  moon: '/moon.png',
 };
 
-const checkTheme = ref(false)
+const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='light')
+
+
 
 </script>
 
@@ -154,7 +156,8 @@ const checkTheme = ref(false)
 
   <div class="mt-5">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button data-toggle-theme="dark,light" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
+    <button
+    data-toggle-theme="laxury,light" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
       <img
         class="h-8"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
