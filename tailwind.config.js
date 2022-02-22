@@ -13,11 +13,11 @@ module.exports = {
                   '100%': {
                       opacity: '1',
                   },
-              }
+              },
           },
           animation: {
-              'fade-in-down': 'fade-in-down 0.5s ease-out'
-          }
+              'fade-in-down': 'fade-in-down 0.5s ease-in'
+          },   
       },
   },
     plugins: [require('daisyui'),],
