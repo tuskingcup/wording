@@ -1,51 +1,58 @@
 <script setup>
-import { ref, reactive, computed } from "vue";
-import { word } from "./word.json";
+import { ref, reactive, computed } from 'vue';
+import { word } from './word.json';
 
 const evalueteStatus = {
-  present: "present",
-  correct: "correct",
-  absent: "absent",
+  present: 'present',
+  correct: 'correct',
+  absent: 'absent',
 };
-const gameStatus = { progress: "progress", win: "win", fail: "fail" };
+const gameStatus = {
+  progress: 'progress',
+  win: 'win',
+  fail: 'fail',
+  error: 'error',
+};
 const word1 = word.word1;
 const word2 = word.word2;
 const randomWord = ref(word1[Math.floor(Math.random() * 2315)]);
-const inputWord = ref("");
+const inputWord = ref('');
 const round = ref(0);
 const gameIsEnd = ref(gameStatus.progress);
 
+// const checkError = ref(gameStatus.error)
+
 const board = reactive([
   {
-    bordState: "",
+    bordState: '',
     evalution: [],
   },
   {
-    bordState: "",
+    bordState: '',
     evalution: [],
   },
   {
-    bordState: "",
+    bordState: '',
     evalution: [],
   },
   {
-    bordState: "",
+    bordState: '',
     evalution: [],
   },
   {
-    bordState: "",
+    bordState: '',
     evalution: [],
   },
   {
-    bordState: "",
+    bordState: '',
     evalution: [],
   },
 ]);
 const words = computed(() => {
   const wordList = [];
   for (const wb of board) {
-    if (wb.bordState !== "") {
-      wordList.push(...wb.bordState.split(""));
+    if (wb.bordState !== '') {
+      wordList.push(...wb.bordState.split(''));
     }
   }
   return wordList;
@@ -53,18 +60,19 @@ const words = computed(() => {
 const evalutes = computed(() => {
   const evaluteList = [];
   for (const eb of board) {
-    if (eb.evalution !== "") {
+    if (eb.evalution !== '') {
       evaluteList.push(...eb.evalution);
     }
   }
   return evaluteList;
 });
+console.log(randomWord.value);
 
 const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
     setWord();
     round.value++;
-    console.log("you win");
+    console.log('you win');
     gameIsEnd.value = gameStatus.win;
     toggleModal();
   } else if (
@@ -73,15 +81,19 @@ const checkInput = () => {
   ) {
     setWord();
     round.value++;
+    gameIsEnd.value = gameStatus.progress;
     console.log(`${round.value} Try Again`);
   } else {
+    gameIsEnd.value = gameStatus.error;
     console.log(`${round.value} don't have this word`);
   }
-  if (round.value == 6 ) {
+
+  if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
     toggleModal();
   }
-  inputWord.value = "";
+
+  inputWord.value = '';
 };
 
 const checkAnswer = () => {
@@ -111,7 +123,7 @@ const setWord = () => {
 
 const reset = () => {
   board.forEach((e) => {
-    e.bordState = "";
+    e.bordState = '';
     e.evalution = [];
   });
   round.value = 0;
@@ -123,14 +135,40 @@ const reset = () => {
 };
 
 function toggleModal() {
-  document.getElementById("modal").classList.toggle("hidden");
+  document.getElementById('modal').classList.toggle('hidden');
 }
+
+const isLight = ref(false);
+
+const changeBg = () => {
+  // let bg =
+    isLight.value === false
+      ? document.documentElement.setAttribute('data-theme', 'laxury')
+      : document.documentElement.setAttribute('data-theme', 'light');
+};
 </script>
 
 <template>
   <div class="animate-pulse font-serif font-bold text-6xl">
-    <h1 class="mt-10 text-amber-500">WORDING</h1>
+    <h1 class="mt-10 text-amber-500">WORDLE</h1>
   </div>
+
+  <div class="mt-5">
+    <button type="button" @click="(isLight = !isLight), changeBg()">
+      <img
+        class="lightIcon h-8"
+        src="https://cdn-icons-png.flaticon.com/512/890/890347.png"
+        v-if="isLight === true"
+      />
+
+      <img
+        class="darkIcon h-8"
+        src="https://cdn-icons.flaticon.com/png/512/2387/premium/2387889.png?token=exp=1645453047~hmac=05f3e5e5d9cbf4113ba0e671df41d019"
+        v-if="isLight === false"
+      />
+    </button>
+  </div>
+
   <div class="flex justify-center">
     <div class="form-control">
       <input
@@ -140,9 +178,16 @@ function toggleModal() {
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
-        :disabled="gameIsEnd !== gameStatus.progress"
+        :disabled="
+          gameIsEnd === gameStatus.fail || gameIsEnd === gameStatus.win
+        "
       />
+      <!-- + gameIsEnd === gameStatus.win -->
     </div>
+  </div>
+
+  <div v-show="gameIsEnd === gameStatus.error">
+    <p class="text-red-600 m-5">Don't have this word!</p>
   </div>
 
   <div class="text-blue-400 flex items-center justify-center mt-10">
@@ -150,6 +195,8 @@ function toggleModal() {
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
+          'border-2 border-gray-200': isLight === true,
+          'border-2 border-transparent': isLight === false,
           'bg-white': evalutes[index] == evalueteStatus.absent,
           'animation-pop bg-green-300':
             evalutes[index] == evalueteStatus.correct,
@@ -188,8 +235,7 @@ function toggleModal() {
             }}
           </h1>
           <p class="text-center uppercase mt-4">
-            Answer :
-            <strong>{{ randomWord }}</strong>
+            Answer : <strong>{{ randomWord }}</strong>
           </p>
         </div>
         <div class="bg-gray-200 px-4 py-3 text-right">
