@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { word } from './word.json'
+import { ref, reactive, computed } from 'vue';
+import { word } from './word.json';
 
 const evalueteStatus = {
   present: 'present',
@@ -75,72 +75,88 @@ const checkInput = () => {
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
   ) {
-    setWord()
-    round.value++
-    checkError.value = false
-    console.log(`${round.value} Try Again`)
+    setWord();
+    round.value++;
+    gameIsEnd.value = gameStatus.progress;
+    console.log(`${round.value} Try Again`);
   } else {
-    checkError.value = true
-    console.log(`${round.value} don't have this word`)
+    gameIsEnd.value = gameStatus.error;
+    console.log(`${round.value} don't have this word`);
   }
+
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
-    gameIsEnd.value = gameStatus.fail
-    toggleModal()
+    gameIsEnd.value = gameStatus.fail;
+    toggleModal();
   }
-  inputWord.value = ''
-}
+
+  inputWord.value = '';
+};
 
 const checkAnswer = () => {
-  const evaList = []
+  const evaList = [];
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList.push(evalueteStatus.correct)
+      evaList.push(evalueteStatus.correct);
     } else {
       for (const rand of randomWord.value) {
         if (inputWord.value[inputIdx] === rand) {
-          evaList.push(evalueteStatus.present)
-          break
+          evaList.push(evalueteStatus.present);
+          break;
         }
       }
     }
     if (evaList.length === inputIdx) {
-      evaList.push(evalueteStatus.absent)
+      evaList.push(evalueteStatus.absent);
     }
   }
-  return evaList
-}
+  return evaList;
+};
 
 const setWord = () => {
-  board[round.value].bordState = inputWord.value
-  board[round.value].evalution = checkAnswer()
-}
+  board[round.value].bordState = inputWord.value;
+  board[round.value].evalution = checkAnswer();
+};
 
 const reset = () => {
   board.forEach((e) => {
-    e.bordState = ''
-    e.evalution = []
-  })
-  round.value = 0
-  gameIsEnd.value = gameStatus.progress
-  randomWord.value = word1[Math.floor(Math.random() * 2315)]
-  toggleModal()
-  console.log(randomWord.value)
+    e.bordState = '';
+    e.evalution = [];
+  });
+  round.value = 0;
+  gameIsEnd.value = gameStatus.progress;
+  randomWord.value = word1[Math.floor(Math.random() * 2315)];
+  toggleModal();
+  console.log(randomWord.value);
   // console.log(board)
-}
+};
 
 function toggleModal() {
-  document.getElementById('modal').classList.toggle('hidden')
+  document.getElementById('modal').classList.toggle('hidden');
 }
+
+const iconSunMoon = {
+  sun: '/public/sun.png',
+  moon: '/public/moon.png',
+};
+
+const checkTheme = ref(false)
 </script>
 
 <template>
   <div class="animate-pulse font-serif font-bold text-6xl">
-    <p
-      class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700"
-    >
-      WORDING
-    </p>
+    <h1 class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700">WORDLE</h1>
   </div>
+
+  <div class="mt-5">
+    <!-- <button type="button" @click="toggleTheme() "> -->
+    <button data-toggle-theme="laxury,light" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+      <img
+        class="h-8"
+        :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
+      />
+    </button>
+  </div>
+
   <div class="flex justify-center">
     <div class="form-control">
       <input
@@ -150,24 +166,27 @@ function toggleModal() {
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
-        :disabled="gameIsEnd !== gameStatus.progress"
+        :disabled="
+          gameIsEnd === gameStatus.fail || gameIsEnd === gameStatus.win
+        "
       />
+      <!-- + gameIsEnd === gameStatus.win -->
     </div>
   </div>
-  <div class="mt-10 animate-fade-in-down" v-show="checkError === true">
-    <p class="animate-bounce text-lg font-bold text-amber-500">
-      Don't have this word!
-    </p>
+
+  <div v-show="gameIsEnd === gameStatus.error">
+    <p class="text-red-600 m-5">Don't have this word!</p>
   </div>
+
   <div class="text-blue-400 flex items-center justify-center mt-10">
     <div class="grid grid-cols-5 gap-4">
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'bg-white': evalutes[index] == evalueteStatus.absent,
+          'bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
           'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
-          'bg-amber-300': evalutes[index] == evalueteStatus.present
+          'bg-amber-300': evalutes[index] == evalueteStatus.present,
         }"
         v-for="(boards, index) in words"
       >
@@ -229,6 +248,8 @@ function toggleModal() {
 </template>
 
 <style>
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
