@@ -13,6 +13,7 @@ const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
 const inputWord = ref('')
 const round = ref(0)
 const score = ref(localStorage.getItem("score"))
+const totalAttemps = ref(localStorage.getItem("totalAttemps"))
 const gameIsEnd = ref(gameStatus.progress)
 const checkError = ref(false)
 const board = reactive([
@@ -59,10 +60,10 @@ const evalutes = computed(() => {
   }
   return evaluteList
 })
-
-console.log(score.value)
 console.log(randomWord.value)
 const checkInput = () => {
+  totalAttemps.value++;
+  localStorage.setItem("totalAttemps",totalAttemps.value);
   if (randomWord.value == inputWord.value.toLowerCase()) {
     setWord()
     round.value++
@@ -133,9 +134,7 @@ const iconSunMoon = {
   moon: 'https://cdn.iconscout.com/icon/free/png-256/moon-1716354-1461199.png',
 };
 const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
-const checkScore = () => {
-    score.value = localStorage.getItem("score")==undefined?localStorage.setItem("score",0):localStorage.getItem("score")
-}
+
 </script>
 
 <template>
@@ -222,6 +221,7 @@ const checkScore = () => {
             Answer : <strong>{{ randomWord }}</strong>
           </p>
           <p class="text-center uppercase mt-4">Score: {{ score }}</p>
+          <p class="text-center uppercase mt-4">Total Attemps: {{ totalAttemps }}</p>
         </div>
 
         <div class="bg-gray-200 px-4 py-3 text-right">
