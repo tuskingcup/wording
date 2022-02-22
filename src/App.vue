@@ -74,7 +74,7 @@ const checkInput = () => {
     round.value++;
     console.log('you win');
     gameIsEnd.value = gameStatus.win;
-    toggleModal();
+    showModal.value = true
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
@@ -90,7 +90,7 @@ const checkInput = () => {
 
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
-    toggleModal();
+    showModal.value = true
   }
 
   inputWord.value = '';
@@ -129,23 +129,22 @@ const reset = () => {
   round.value = 0;
   gameIsEnd.value = gameStatus.progress;
   randomWord.value = word1[Math.floor(Math.random() * 2315)];
-  toggleModal();
+  showModal.value = false
   console.log(randomWord.value);
   // console.log(board)
 };
 
-function toggleModal() {
-  document.getElementById('modal').classList.toggle('hidden');
-}
 
-const isLight = ref(false);
+const showModal = ref(false)
 
-const changeBg = () => {
-  // let bg =
-    isLight.value === false
-      ? document.documentElement.setAttribute('data-theme', 'laxury')
-      : document.documentElement.setAttribute('data-theme', 'light');
+
+const iconSunMoon = {
+  sun: '/public/sun.png',
+  moon: '/public/moon.png',
 };
+
+const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
+
 </script>
 
 <template>
@@ -154,20 +153,25 @@ const changeBg = () => {
   </div>
 
   <div class="mt-5">
-    <button type="button" @click="(isLight = !isLight), changeBg()">
+    <!-- <button type="button" @click="toggleTheme() "> -->
+    <button data-toggle-theme="luxury,cupcake" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
       <img
-        class="lightIcon h-8"
-        src="https://cdn-icons-png.flaticon.com/512/890/890347.png"
-        v-if="isLight === true"
-      />
-
-      <img
-        class="darkIcon h-8"
-        src="https://cdn-icons.flaticon.com/png/512/2387/premium/2387889.png?token=exp=1645453047~hmac=05f3e5e5d9cbf4113ba0e671df41d019"
-        v-if="isLight === false"
+        class="h-8"
+        :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
       />
     </button>
   </div>
+  <div class="m-5">
+	<h2 class="mb-4 text-2xl text-green-700 font-bold">Toggle</h2>
+	🌞
+	<div class="inline-block w-10">
+		<span data-toggle-theme="luxury,cupcake" data-act-class="ACTIVECLASS" class="border rounded-full border-green-700 flex items-center cursor-pointer w-10 transition-all duration-300 ease-in-out pl-0">
+			<span class="rounded-full w-3 h-3 m-1 bg-green-700">
+			</span>
+		</span>
+	</div>
+	🌚
+</div>
 
   <div class="flex justify-center">
     <div class="form-control">
@@ -195,8 +199,8 @@ const changeBg = () => {
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'border-2 border-gray-200': isLight === true,
-          'border-2 border-transparent': isLight === false,
+          'border-2 border-gray-200': checkTheme === true,
+          'border-2 border-transparent': checkTheme === false,
           'bg-white': evalutes[index] == evalueteStatus.absent,
           'animation-pop bg-green-300':
             evalutes[index] == evalueteStatus.correct,
@@ -210,8 +214,12 @@ const changeBg = () => {
   </div>
 
   <div
-    class="animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0 hidden"
+    :class="{
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0': true,
+      'hidden' : showModal == false
+      }"
     id="modal"
+   
   >
     <div
       class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0"
@@ -271,6 +279,7 @@ const changeBg = () => {
 .animation-pop {
   animation: 0.5s linear popup;
 }
+
 
 @keyframes popup {
   0% {
