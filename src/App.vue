@@ -139,7 +139,7 @@ const iconSunMoon = {
   moon: '/public/moon.png',
 };
 
-const checkTheme = ref(false)
+const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
 </script>
 
 <template>
@@ -149,7 +149,7 @@ const checkTheme = ref(false)
 
   <div class="mt-5">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button data-toggle-theme="laxury,light" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+    <button data-toggle-theme="cupcake,laxury" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
       <img
         class="h-8"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
@@ -174,11 +174,11 @@ const checkTheme = ref(false)
     </div>
   </div>
 
-  <div v-show="gameIsEnd === gameStatus.error">
-    <p class="text-red-600 m-5">Don't have this word!</p>
+  <div class="animate-fade-in-down fixed inset-x-0 mt-5" v-show="gameIsEnd === gameStatus.error">
+    <p class="animate-bounce text-amber-600" >Don't have this word!</p>
   </div>
 
-  <div class="text-blue-400 flex items-center justify-center mt-10">
+  <div class="text-blue-400 flex items-center justify-center mt-12">
     <div class="grid grid-cols-5 gap-4">
       <div
         class="p-5 rounded list-none uppercase"
