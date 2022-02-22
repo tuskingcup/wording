@@ -1,90 +1,267 @@
 <script setup>
-  import {ref,reactive} from 'vue'
-  import {word} from './word.json'
-  
-  const evalueteStatus = ["present","correct","absent"]
-
-  const word1 = word.word1;
-  const word2 = word.word2;
-
-  const randomWord = word1[Math.floor(Math.random()*2315)]
-  const inputWord = ref('')
-  const round = 0
-  const board = reactive([{
-    bordState : '',
-    evalution : []
-    },
-    {
-    bordState : '',
-    evalution : []
-    },
-    {
-    bordState : '',
-    evalution : []
-    },
-    {
-    bordState : '',
-    evalution : []
-    },
-    {
-    bordState : '',
-    evalution : []
-    },
-    {
-    bordState : '',
-    evalution : []
-    }])
-  console.log(randomWord);
-  const checkInput = () => {
-    if(round==6){return console.log('You Lose');}
-    if(randomWord==inputWord.value.toLowerCase()){
-      return console.log(`round:${round} You WIN`);
-    }
-    if(word1.includes(inputWord.value.toLowerCase())||word2.includes(inputWord.value.toLowerCase())){
-
-      board[round].bordState = inputWord.value;
-      
-      return console.log(`${round} Try Again`)
-    }
-    else {
-      return console.log(`${round} don't have this word`);
-    }
-    
+import { ref, reactive, computed } from 'vue';
+import { word } from './word.json';
+const evalueteStatus = {
+  present: 'present',
+  correct: 'correct',
+  absent: 'absent'
+}
+const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' }
+const word1 = word.word1
+const word2 = word.word2
+const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
+const inputWord = ref('')
+const round = ref(0)
+const score = ref(localStorage.getItem("score"))
+const gameIsEnd = ref(gameStatus.progress)
+const checkError = ref(false)
+const board = reactive([
+  {
+    bordState: '',
+    evalution: []
+  },
+  {
+    bordState: '',
+    evalution: []
+  },
+  {
+    bordState: '',
+    evalution: []
+  },
+  {
+    bordState: '',
+    evalution: []
+  },
+  {
+    bordState: '',
+    evalution: []
+  },
+  {
+    bordState: '',
+    evalution: []
   }
-  const checkAnswer = () => {
-    for(let inputIdx = 0;eleInput< inputWord.value.length; inputIdx++){
-      for(let randIdx = 0;eleRand< randomWord.length;randIdx++){
-        if(inputWord.value[inputIdx]==randomWord[randIdx]){
-          
+])
+const words = computed(() => {
+  const wordList = []
+  for (const wb of board) {
+    if (wb.bordState !== '') {
+      wordList.push(...wb.bordState.split(''))
+    }
+  }
+  return wordList
+})
+const evalutes = computed(() => {
+  const evaluteList = []
+  for (const eb of board) {
+    if (eb.evalution !== '') {
+      evaluteList.push(...eb.evalution)
+    }
+  }
+  return evaluteList
+})
+
+console.log(score.value)
+console.log(randomWord.value)
+const checkInput = () => {
+  if (randomWord.value == inputWord.value.toLowerCase()) {
+    setWord()
+    round.value++
+    console.log('you win')
+    checkError.value = false
+    gameIsEnd.value = gameStatus.win
+    score.value++
+    localStorage.setItem("score",score.value)
+    toggleModal()
+  } else if (
+    word1.includes(inputWord.value.toLowerCase()) ||
+    word2.includes(inputWord.value.toLowerCase())
+  ) {
+    setWord();
+    round.value++;
+    gameIsEnd.value = gameStatus.progress;
+    console.log(`${round.value} Try Again`);
+  } else {
+    gameIsEnd.value = gameStatus.error;
+    console.log(`${round.value} don't have this word`);
+  }
+  if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
+    gameIsEnd.value = gameStatus.fail;
+    toggleModal();
+  }
+  inputWord.value = '';
+};
+const checkAnswer = () => {
+  const evaList = [];
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+    if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
+      evaList.push(evalueteStatus.correct);
+    } else {
+      for (const rand of randomWord.value) {
+        if (inputWord.value[inputIdx] === rand) {
+          evaList.push(evalueteStatus.present);
+          break;
         }
       }
     }
+    if (evaList.length === inputIdx) {
+      evaList.push(evalueteStatus.absent);
+    }
   }
-
-
+  return evaList;
+};
+const setWord = () => {
+  board[round.value].bordState = inputWord.value;
+  board[round.value].evalution = checkAnswer();
+};
+const reset = () => {
+  board.forEach((e) => {
+    e.bordState = '';
+    e.evalution = [];
+  });
+  round.value = 0;
+  gameIsEnd.value = gameStatus.progress;
+  randomWord.value = word1[Math.floor(Math.random() * 2315)];
+  toggleModal();
+  console.log(randomWord.value);
+  // console.log(board)
+};
+function toggleModal() {
+  document.getElementById('modal').classList.toggle('hidden');
+}
+const iconSunMoon = {
+  sun: 'https://cdn-icons-png.flaticon.com/512/169/169367.png',
+  moon: 'https://cdn.iconscout.com/icon/free/png-256/moon-1716354-1461199.png',
+};
+const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
+const checkScore = () => {
+    score.value = localStorage.getItem("score")==undefined?localStorage.setItem("score",0):localStorage.getItem("score")
+}
 </script>
 
 <template>
-<div class="flex justify-center ">
-  
-</div>
-
-{{inputWord}}
-<div class="flex justify-center ">
-  <div class="form-control">
-    <input type="text" placeholder="ENTER YOUR WORD !!" style="text-transform:uppercase" class="input bg-base-200" maxlength="5" v-model="inputWord" @keyup.enter="checkInput">
+  <div class="animate-pulse font-serif font-bold text-6xl">
+    <h1 class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700">WORDLE</h1>
   </div>
-</div>
-  
+
+  <div class="mt-5">
+    <!-- <button type="button" @click="toggleTheme() "> -->
+    <button data-toggle-theme="cupcake,halloween" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+      <img
+        class="h-8"
+        :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
+      />
+    </button>
+  </div>
+
+  <div class="flex justify-center">
+    <div class="form-control">
+      <input
+        type="text"
+        placeholder="ENTER YOUR WORD !!"
+        class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10"
+        maxlength="5"
+        v-model="inputWord"
+        @keyup.enter="checkInput"
+        :disabled="
+          gameIsEnd === gameStatus.fail || gameIsEnd === gameStatus.win
+        "
+      />
+      <!-- + gameIsEnd === gameStatus.win -->
+    </div>
+  </div>
+
+  <div class="animate-fade-in-down fixed inset-x-0 mt-5" v-show="gameIsEnd === gameStatus.error">
+    <p class="animate-bounce text-amber-600" >Don't have this word!</p>
+  </div>
+
+  <div class="text-blue-400 flex items-center justify-center mt-12">
+    <div class="grid grid-cols-5 gap-4">
+      <div
+        class="p-5 rounded list-none uppercase"
+        :class="{
+          'bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
+          'animation-pop-correct bg-green-300':
+            evalutes[index] == evalueteStatus.correct,
+          'bg-amber-300': evalutes[index] == evalueteStatus.present,
+        }"
+        v-for="(boards, index) in words"
+      >
+        {{ boards }}
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL -->
+  <div
+    class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden"
+    id="modal"
+  >
+    <div
+      class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
+      <div class="fixed inset-0 transition-opacity">
+        <div class="animate-fade-in-down absolute inset-0 bg-gray-900 opacity-75"></div>
+      </div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
+        >&#8203;</span
+      >
+      <div
+        class="inline-block align-center bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-headline"
+      >
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
+          <h1 class="text-3xl text-center uppercase mt-5">
+            {{
+              gameIsEnd === gameStatus.win ? `Congratulations !!` : `You Fail`
+            }}
+          </h1>
+          <p class="text-center uppercase mt-4">
+            Answer : <strong>{{ randomWord }}</strong>
+          </p>
+          <p class="text-center uppercase mt-4">Score: {{ score }}</p>
+        </div>
+
+        <div class="bg-gray-200 px-4 py-3 text-right">
+          <button @click="reset()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10 hover:stroke-amber-500 hover:animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+.animation-pop-correct {
+  animation: 1.2s linear popup;
+}
+@keyframes popup {
+        0%   { transform: scale(1,1)    translateY(-10px); }
+        10%  { transform: scale(1.1,.9) translateY(0); }
+        30%  { transform: scale(.9,1.1) translateY(0); }
+        50%  { transform: scale(1,1)    translateY(0); }
+        100% { transform: scale(1,1)    translateY(0); }
+  
 }
 </style>
