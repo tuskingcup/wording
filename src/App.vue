@@ -74,7 +74,7 @@ const checkInput = () => {
     round.value++;
     console.log('you win');
     gameIsEnd.value = gameStatus.win;
-    toggleModal();
+    showModal.value = true
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
@@ -90,7 +90,7 @@ const checkInput = () => {
 
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
-    toggleModal();
+    showModal.value = true
   }
 
   inputWord.value = '';
@@ -129,23 +129,22 @@ const reset = () => {
   round.value = 0;
   gameIsEnd.value = gameStatus.progress;
   randomWord.value = word1[Math.floor(Math.random() * 2315)];
-  toggleModal();
+  showModal.value = false
   console.log(randomWord.value);
   // console.log(board)
 };
 
-function toggleModal() {
-  document.getElementById('modal').classList.toggle('hidden');
-}
 
-const isLight = ref(false);
+const showModal = ref(false)
 
-const changeBg = () => {
-  let bg =
-    isLight.value === false
-      ? document.documentElement.setAttribute('data-theme', 'laxury')
-      : document.documentElement.setAttribute('data-theme', 'light');
+
+const iconSunMoon = {
+  sun: '/public/sun.png',
+  moon: '/public/moon.png',
 };
+
+const checkTheme = ref(false)
+
 </script>
 
 <template>
@@ -154,17 +153,11 @@ const changeBg = () => {
   </div>
 
   <div class="mt-5">
-    <button type="button" @click="(isLight = !isLight), changeBg()">
+    <!-- <button type="button" @click="toggleTheme() "> -->
+    <button data-toggle-theme="dark,light" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
       <img
-        class="lightIcon h-8"
-        src="https://cdn-icons-png.flaticon.com/512/890/890347.png"
-        v-if="isLight === true"
-      />
-
-      <img
-        class="darkIcon h-8"
-        src="https://cdn-icons.flaticon.com/png/512/2387/premium/2387889.png?token=exp=1645453047~hmac=05f3e5e5d9cbf4113ba0e671df41d019"
-        v-if="isLight === false"
+        class="h-8"
+        :src="checkTheme === true ? iconSunMoon. moon : iconSunMoon.sun"
       />
     </button>
   </div>
@@ -210,8 +203,12 @@ const changeBg = () => {
   </div>
 
   <div
-    class="animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0 hidden"
+    :class="{
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0': true,
+      'hidden' : showModal == false
+      }"
     id="modal"
+   
   >
     <div
       class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0"
@@ -271,6 +268,7 @@ const changeBg = () => {
 .animation-pop {
   animation: 0.5s linear popup;
 }
+
 
 @keyframes popup {
   0% {
