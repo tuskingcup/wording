@@ -1,4 +1,4 @@
-# ![wordleicon](https://www.nytimes.com/games/wordle/images/NYT-Wordle-Icon-192.png) Wordle Simple
+# Wordle Simple
 
 ## Wordle
 
