@@ -5,68 +5,63 @@ import { word } from './word.json';
 const evalueteStatus = {
   present: 'present',
   correct: 'correct',
-  absent: 'absent',
-};
-const gameStatus = {
-  progress: 'progress',
-  win: 'win',
-  fail: 'fail',
-  error: 'error',
-};
-const word1 = word.word1;
-const word2 = word.word2;
-const randomWord = ref(word1[Math.floor(Math.random() * 2315)]);
-const inputWord = ref('');
-const round = ref(0);
-const gameIsEnd = ref(gameStatus.progress);
+  absent: 'absent'
+}
+const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' }
+const word1 = word.word1
+const word2 = word.word2
+const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
+const inputWord = ref('')
+const round = ref(0)
+const gameIsEnd = ref(gameStatus.progress)
 
-// const checkError = ref(gameStatus.error)
+const checkError = ref(false)
 
 const board = reactive([
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
-  },
-]);
+    evalution: []
+  }
+])
 const words = computed(() => {
-  const wordList = [];
+  const wordList = []
   for (const wb of board) {
     if (wb.bordState !== '') {
-      wordList.push(...wb.bordState.split(''));
+      wordList.push(...wb.bordState.split(''))
     }
   }
-  return wordList;
-});
+  return wordList
+})
 const evalutes = computed(() => {
-  const evaluteList = [];
+  const evaluteList = []
   for (const eb of board) {
     if (eb.evalution !== '') {
-      evaluteList.push(...eb.evalution);
+      evaluteList.push(...eb.evalution)
     }
   }
-  return evaluteList;
-});
-console.log(randomWord.value);
+  return evaluteList
+})
+console.log(randomWord.value)
 
 const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
@@ -151,13 +146,12 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
 
 <template>
   <div class="animate-pulse font-serif font-bold text-6xl">
-    <h1 class="mt-10 text-amber-500">WORDLE</h1>
+    <h1 class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700">WORDLE</h1>
   </div>
 
   <div class="mt-5">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button
-    data-toggle-theme="laxury,light" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
+    <button data-toggle-theme="cupcake,laxury" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
       <img
         class="h-8"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
@@ -182,19 +176,17 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
     </div>
   </div>
 
-  <div v-show="gameIsEnd === gameStatus.error">
-    <p class="text-red-600 m-5">Don't have this word!</p>
+  <div class="animate-fade-in-down fixed inset-x-0 mt-5" v-show="gameIsEnd === gameStatus.error">
+    <p class="animate-bounce text-amber-600" >Don't have this word!</p>
   </div>
 
-  <div class="text-blue-400 flex items-center justify-center mt-10">
+  <div class="text-blue-400 flex items-center justify-center mt-12">
     <div class="grid grid-cols-5 gap-4">
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'border-2 border-gray-200': checkTheme === true,
-          'border-2 border-transparent': checkTheme === false,
-          'bg-white': evalutes[index] == evalueteStatus.absent,
-          'animation-pop bg-green-300':
+          'bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
+          'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
           'bg-amber-300': evalutes[index] == evalueteStatus.present,
         }"
@@ -217,7 +209,7 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
       class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
       <div class="fixed inset-0 transition-opacity">
-        <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+        <div class="animate-fade-in-down absolute inset-0 bg-gray-900 opacity-75"></div>
       </div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
         >&#8203;</span
@@ -231,7 +223,7 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
           <h1 class="text-3xl text-center uppercase mt-5">
             {{
-              gameIsEnd === gameStatus.win ? `congratulations !!` : `You Fail`
+              gameIsEnd === gameStatus.win ? `Congratulations !!` : `You Fail`
             }}
           </h1>
           <p class="text-center uppercase mt-4">
@@ -262,32 +254,26 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
 </template>
 
 <style>
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
 }
 
-.animation-pop {
-  animation: 0.5s linear popup;
+.animation-pop-correct {
+  animation: 1.2s linear popup;
 }
 
 
 @keyframes popup {
-  0% {
-    transform: scale(1.2);
-  }
-  25% {
-    transform: scale(1.15);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  75% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
+        0%   { transform: scale(1,1)    translateY(-10px); }
+        10%  { transform: scale(1.1,.9) translateY(0); }
+        30%  { transform: scale(.9,1.1) translateY(0); }
+        50%  { transform: scale(1,1)    translateY(0); }
+        100% { transform: scale(1,1)    translateY(0); }
+  
 }
+
 </style>
