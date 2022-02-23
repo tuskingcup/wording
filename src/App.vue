@@ -103,7 +103,7 @@ const checkAnswer = () => {
   }
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
       for (let randIdx = 0; randIdx < inputWord.value.length; randIdx++) {
-        if (inputWord.value[inputIdx] === randomWord.value[randIdx]&&correctList[randIdx]==0) {
+        if (inputWord.value[inputIdx] === randomWord.value[randIdx]&&correctList[randIdx]===0) {
           evaList[inputIdx]=evalueteStatus.present;
           break;
         }
