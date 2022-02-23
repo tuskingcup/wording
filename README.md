@@ -1,7 +1,9 @@
-# Vue 3 + Vite
+# ![wordleicon](https://www.nytimes.com/games/wordle/images/NYT-Wordle-Icon-192.png) Wordle Simple
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Wordle
 
-## Recommended IDE Setup
+เกมเดาคำศัพท์ ต้องเดาคำศัพท์ใหม่ในแต่ละครั้ง มีจำนวนทั้งหมด 6 ครั้ง และในการเดาแต่ละครั้งจะเปิดเผยข้อมูลบางอย่าง
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+## How to play
+- ผู้เล่นพิมพ์ตัวอักษรในช่องใส่ตัวอักษรเพื่อทายคำ
+- เมื่อครบ 5 ตัวอักษรแล้วกด Enter หากตัวอักษรนั้นเป็นตัวอักษรที่ใช่และอยู่ถูกตำแหน่ง ตัวอักษรจะกลายเป็นสีเขียว หากเป็นตัวอักษรที่ใช่ แต่ไม่ถูกตำแหน่ง ตัวอักษรจะกลายเป็นสีเหลือง และถ้าเป็นตัวอักษรที่ไม่ใช่เลย จะกลายเป็นสีขาว
