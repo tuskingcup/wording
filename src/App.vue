@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue';
 import { word } from './word.json';
+
 const evalueteStatus = {
   present: 'present',
   correct: 'correct',
@@ -12,10 +13,10 @@ const word2 = word.word2
 const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
 const inputWord = ref('')
 const round = ref(0)
-const score = ref(localStorage.getItem("score"))
-const totalAttemps = ref(localStorage.getItem("totalAttemps"))
 const gameIsEnd = ref(gameStatus.progress)
+
 const checkError = ref(false)
+
 const board = reactive([
   {
     bordState: '',
@@ -61,17 +62,14 @@ const evalutes = computed(() => {
   return evaluteList
 })
 console.log(randomWord.value)
+
 const checkInput = () => {
-  totalAttemps.value++;
-  localStorage.setItem("totalAttemps",totalAttemps.value);
   if (randomWord.value == inputWord.value.toLowerCase()) {
     setWord()
     round.value++
     console.log('you win')
     checkError.value = false
     gameIsEnd.value = gameStatus.win
-    score.value++
-    localStorage.setItem("score",score.value)
     toggleModal()
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
@@ -85,12 +83,15 @@ const checkInput = () => {
     gameIsEnd.value = gameStatus.error;
     console.log(`${round.value} don't have this word`);
   }
+
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
     toggleModal();
   }
+
   inputWord.value = '';
 };
+
 const checkAnswer = () => {
   const evaList = [];
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
@@ -110,10 +111,12 @@ const checkAnswer = () => {
   }
   return evaList;
 };
+
 const setWord = () => {
   board[round.value].bordState = inputWord.value;
   board[round.value].evalution = checkAnswer();
 };
+
 const reset = () => {
   board.forEach((e) => {
     e.bordState = '';
@@ -126,15 +129,17 @@ const reset = () => {
   console.log(randomWord.value);
   // console.log(board)
 };
+
 function toggleModal() {
   document.getElementById('modal').classList.toggle('hidden');
 }
-const iconSunMoon = {
-  sun: 'https://cdn-icons-png.flaticon.com/512/169/169367.png',
-  moon: 'https://cdn.iconscout.com/icon/free/png-256/moon-1716354-1461199.png',
-};
-const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
 
+const iconSunMoon = {
+  sun: '/public/sun.png',
+  moon: '/public/moon.png',
+};
+
+const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
 </script>
 
 <template>
@@ -144,7 +149,7 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
 
   <div class="mt-5">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button data-toggle-theme="cupcake,halloween" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+    <button data-toggle-theme="cupcake,laxury" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
       <img
         class="h-8"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
@@ -190,8 +195,6 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
     </div>
   </div>
 
-
-  <!-- MODAL -->
   <div
     class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden"
     id="modal"
@@ -220,10 +223,7 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
           <p class="text-center uppercase mt-4">
             Answer : <strong>{{ randomWord }}</strong>
           </p>
-          <p class="text-center uppercase mt-4">Score: {{ score }}</p>
-          <p class="text-center uppercase mt-4">Total Attemps: {{ totalAttemps }}</p>
         </div>
-
         <div class="bg-gray-200 px-4 py-3 text-right">
           <button @click="reset()">
             <svg
@@ -248,14 +248,18 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
 </template>
 
 <style>
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
 }
+
 .animation-pop-correct {
   animation: 1.2s linear popup;
 }
+
 @keyframes popup {
         0%   { transform: scale(1,1)    translateY(-10px); }
         10%  { transform: scale(1.1,.9) translateY(0); }
@@ -264,4 +268,5 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
         100% { transform: scale(1,1)    translateY(0); }
   
 }
+
 </style>
