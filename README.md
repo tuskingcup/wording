@@ -7,3 +7,13 @@
 ## How to play
 - ผู้เล่นพิมพ์ตัวอักษรในช่องใส่ตัวอักษรเพื่อทายคำ
 - เมื่อครบ 5 ตัวอักษรแล้วกด Enter หากตัวอักษรนั้นเป็นตัวอักษรที่ใช่และอยู่ถูกตำแหน่ง ตัวอักษรจะกลายเป็นสีเขียว หากเป็นตัวอักษรที่ใช่ แต่ไม่ถูกตำแหน่ง ตัวอักษรจะกลายเป็นสีเหลือง และถ้าเป็นตัวอักษรที่ไม่ใช่เลย จะกลายเป็นสีขาว
+
+## Example
+![correct](https://github.com/tuskingcup/wording/blob/main/src/assets/correct.jpg)
+มีตัวอักษร Y อยู่ในคำนี้ และ ตำแหน่งถูกต้อง
+
+![present](https://github.com/tuskingcup/wording/blob/main/src/assets/present.jpg)
+มีตัวอักษร O อยู่ในคำนี้ แต่ ตำแหน่งไม่ถูกต้อง
+
+![absent](https://github.com/tuskingcup/wording/blob/main/src/assets/absent.jpg)
+ไม่มีตัวอักษรอยู่ในคำนี้เลย
