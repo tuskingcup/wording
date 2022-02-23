@@ -10,7 +10,8 @@ const evalueteStatus = {
 const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' }
 const word1 = word.word1
 const word2 = word.word2
-const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
+const randomWord = ref('liver')
+//word1[Math.floor(Math.random() * 2315)]
 const inputWord = ref('')
 const round = ref(0)
 const gameIsEnd = ref(gameStatus.progress)
@@ -93,19 +94,23 @@ const checkInput = () => {
 
 const checkAnswer = () => {
   const evaList = [];
-  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+  const correctList=[0,0,0,0,0,0];
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++){
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList.push(evalueteStatus.correct);
-    } else {
-      for (const rand of randomWord.value) {
-        if (inputWord.value[inputIdx] === rand) {
-          evaList.push(evalueteStatus.present);
+      evaList[inputIdx]=(evalueteStatus.correct)
+      correctList[inputIdx] = 1
+    }
+  }
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+      for (let randIdx = 0; randIdx < inputWord.value.length; randIdx++) {
+        if (inputWord.value[inputIdx] === randomWord.value[randIdx]&&correctList[randIdx]==0) {
+          evaList[inputIdx]=evalueteStatus.present;
           break;
         }
       }
-    }
-    if (evaList.length === inputIdx) {
-      evaList.push(evalueteStatus.absent);
+    
+    if (evaList[inputIdx] === undefined) {
+      evaList[inputIdx] = evalueteStatus.absent;
     }
   }
   return evaList;
@@ -133,11 +138,8 @@ const reset = () => {
 const showModal = ref(false)
 
 console.log(localStorage.getItem("theme"));
-const checkTheme = ref((localStorage.getItem("theme")==null||localStorage.getItem("theme")==undefined)?true:localStorage.getItem("theme")=='bumblebee')
+const checkTheme = ref((localStorage.getItem("theme")==null||localStorage.getItem("theme")==undefined)?true:localStorage.getItem("theme")=='cupcake')
 
-function toggleModal() {
-  document.getElementById('modal').classList.toggle('hidden');
-}
 
 const iconSunMoon = {
   sun: '/public/sun.png',
@@ -152,11 +154,11 @@ const iconSunMoon = {
   </div>
 
   <div class="mt-5">
-    <button data-toggle-theme="luxury,bumblebee" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+    <button data-toggle-theme="luxury,cupcake" data-act-class="ACTIVECLASS" class="animate-fade-in-down " @click="checkTheme = !checkTheme">
       <img
         class="h-8"
         :src="checkTheme === true ?iconSunMoon.sun : iconSunMoon.moon"
-      />
+      alt="sumMoon"/>
     </button>
   </div>
 
@@ -200,9 +202,13 @@ const iconSunMoon = {
     </div>
   </div>
 
-  <div
-    class="animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0 hidden"
+   <div
+    :class="{
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0': true,
+      'hidden' : showModal == false
+      }"
     id="modal"
+   
   >
     <div
       class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0"
