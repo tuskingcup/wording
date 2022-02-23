@@ -139,11 +139,11 @@ const showModal = ref(false)
 
 
 const iconSunMoon = {
-  sun: '/public/sun.png',
-  moon: '/public/moon.png',
+  sun: '/src/assets/sun.png',
+  moon: '/src/assets/moon.png',
 };
 
-const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
+const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='bumblebee')
 
 </script>
 
@@ -154,24 +154,13 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
 
   <div class="mt-5">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button data-toggle-theme="luxury,cupcake" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
+    <button data-toggle-theme="luxury,bumblebee" data-act-class="ACTIVECLASS" @click="checkTheme = !checkTheme">
       <img
         class="h-8"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
       />
     </button>
   </div>
-  <div class="m-5">
-	<h2 class="mb-4 text-2xl text-green-700 font-bold">Toggle</h2>
-	🌞
-	<div class="inline-block w-10">
-		<span data-toggle-theme="luxury,cupcake" data-act-class="ACTIVECLASS" class="border rounded-full border-green-700 flex items-center cursor-pointer w-10 transition-all duration-300 ease-in-out pl-0">
-			<span class="rounded-full w-3 h-3 m-1 bg-green-700">
-			</span>
-		</span>
-	</div>
-	🌚
-</div>
 
   <div class="flex justify-center">
     <div class="form-control">
