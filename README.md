@@ -10,10 +10,13 @@
 
 ## Example
 มีตัวอักษร Y อยู่ในคำนี้ และ ตำแหน่งถูกต้อง
+
 ![correct](https://github.com/tuskingcup/wording/blob/main/src/assets/correct.jpg)
 
 มีตัวอักษร O อยู่ในคำนี้ แต่ ตำแหน่งไม่ถูกต้อง
+
 ![present](https://github.com/tuskingcup/wording/blob/main/src/assets/present.jpg)
 
 ไม่มีตัวอักษรอยู่ในคำนี้เลย
+
 ![absent](https://github.com/tuskingcup/wording/blob/main/src/assets/absent.jpg)
