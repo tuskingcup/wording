@@ -1,67 +1,72 @@
 <script setup>
-import { ref, reactive, computed} from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { word } from './word.json';
 
 const evalueteStatus = {
   present: 'present',
   correct: 'correct',
-  absent: 'absent'
-}
-const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' }
-const word1 = word.word1
-const word2 = word.word2
-const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
-const inputWord = ref('')
-const round = ref(0)
-const gameIsEnd = ref(gameStatus.progress)
+  absent: 'absent',
+};
+const gameStatus = {
+  progress: 'progress',
+  win: 'win',
+  fail: 'fail',
+  error: 'error',
+};
+const word1 = word.word1;
+const word2 = word.word2;
+const randomWord = ref(word1[Math.floor(Math.random() * 2315)]);
+const inputWord = ref('');
+const round = ref(0);
+const gameIsEnd = ref(gameStatus.progress);
 
-const checkError = ref(false)
+const checkError = ref(false);
 
 const board = reactive([
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
-  }
-])
+    evalution: [],
+  },
+]);
 const words = computed(() => {
-  const wordList = []
+  const wordList = [];
   for (const wb of board) {
     if (wb.bordState !== '') {
-      wordList.push(...wb.bordState.split(''))
+      wordList.push(...wb.bordState.split(''));
     }
   }
-  return wordList
-})
+  return wordList;
+});
 const evalutes = computed(() => {
-  const evaluteList = []
+  const evaluteList = [];
   for (const eb of board) {
     if (eb.evalution !== '') {
-      evaluteList.push(...eb.evalution)
+      evaluteList.push(...eb.evalution);
     }
   }
-  return evaluteList
-})
-console.log(randomWord.value)
+  return evaluteList;
+});
+console.log(randomWord.value);
 
 const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
@@ -69,7 +74,7 @@ const checkInput = () => {
     round.value++;
     console.log('you win');
     gameIsEnd.value = gameStatus.win;
-    showModal.value = true
+    showModal.value = true;
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
@@ -85,27 +90,57 @@ const checkInput = () => {
 
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
-    showModal.value = true
+    showModal.value = true;
   }
 
   inputWord.value = '';
 };
 
+// const checkAnswer = () => {
+//   const evaList = [];
+//   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+//     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
+//       evaList.push(evalueteStatus.correct);
+//     } else {
+//       for (const rand of randomWord.value) {
+//         if (inputWord.value[inputIdx] === rand) {
+//           evaList.push(evalueteStatus.present);
+//           break;
+//         }
+//       }
+//     }
+//     if (evaList.length === inputIdx) {
+//       evaList.push(evalueteStatus.absent);
+//     }
+//   }
+//   return evaList;
+// };
+
 const checkAnswer = () => {
   const evaList = [];
+  const correctList = [0, 0, 0, 0, 0, 0];
+
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList.push(evalueteStatus.correct);
-    } else {
-      for (const rand of randomWord.value) {
-        if (inputWord.value[inputIdx] === rand) {
-          evaList.push(evalueteStatus.present);
-          break;
-        }
+      evaList[inputIdx] = evalueteStatus.correct;
+      hintstatus.value = evalueteStatus.correct;
+      correctList[inputIdx] = 1;
+    }
+  }
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+    for (let randIdx = 0; randIdx < inputWord.value.length; randIdx++) {
+      if (
+        inputWord.value[inputIdx] === randomWord.value[randIdx] &&
+        correctList[randIdx] == 0
+      ) {
+        evaList[inputIdx] = evalueteStatus.present;
+        hintstatus.value = evalueteStatus.present;
+        break;
       }
     }
-    if (evaList.length === inputIdx) {
-      evaList.push(evalueteStatus.absent);
+
+    if (evaList[inputIdx] === undefined) {
+      evaList[inputIdx] = evalueteStatus.absent;
     }
   }
   return evaList;
@@ -124,34 +159,62 @@ const reset = () => {
   round.value = 0;
   gameIsEnd.value = gameStatus.progress;
   randomWord.value = word1[Math.floor(Math.random() * 2315)];
-  showModal.value = false
+  showModal.value = false;
   console.log(randomWord.value);
   // console.log(board)
 };
 
-
-const showModal = ref(false)
-
+const showModal = ref(false);
 
 const iconSunMoon = {
   sun: '/sun.png',
   moon: '/moon.png',
 };
 
-const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='light')
+const checkTheme = ref(
+  localStorage.getItem('theme') == undefined
+    ? true
+    : localStorage.getItem('theme') == 'cupcake'
+);
 
+let hintstatus = ref('');
 
+// const checkHint = computed(() => {
+//   for (const b of board) {
+//      if(b.evalution.some(e => e == evalueteStatus.present && evalueteStatus.correct)){
+//        hintstatus.value = 'almost'
+//      }
+
+//   }
+//   return hintstatus.value
+// })
+
+let howto = ref(false);
 
 </script>
 
 <template>
-  <div class="animate-pulse font-serif font-bold text-6xl">
-    <h1 class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700">WORDLE</h1>
-  </div>
 
+<div class="m-5">
+ 
+  <img src="/question-mark.png" class="m-5 h-11 w-auto cursor-pointer" @click="howto = !howto">
+  
+  <div class="animate-pulse font-serif font-bold text-6xl">
+    <h1
+      class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700"
+    >
+      WORDLE
+    </h1>
+  </div>
+</div>
   <div class="mt-5">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button data-toggle-theme="cupcake,laxury" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+    <button
+      data-toggle-theme="cupcake,laxury"
+      data-act-class="ACTIVECLASS"
+      class="animate-fade-in-down"
+      @click="checkTheme = !checkTheme"
+    >
       <img
         class="h-8"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
@@ -176,8 +239,11 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
     </div>
   </div>
 
-  <div class="animate-fade-in-down fixed inset-x-0 mt-5" v-show="gameIsEnd === gameStatus.error">
-    <p class="animate-bounce text-amber-600" >Don't have this word!</p>
+  <div
+    class="animate-fade-in-down fixed inset-x-0 mt-5"
+    v-show="gameIsEnd === gameStatus.error"
+  >
+    <p class="animate-bounce text-amber-600">Don't have this word!</p>
   </div>
 
   <div class="text-blue-400 flex items-center justify-center mt-12">
@@ -185,7 +251,8 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
+          'bg-white border-2 border-gray-300':
+            evalutes[index] == evalueteStatus.absent,
           'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
           'bg-amber-300': evalutes[index] == evalueteStatus.present,
@@ -200,16 +267,17 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
   <div
     :class="{
       'animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0': true,
-      'hidden' : showModal == false
-      }"
+      hidden: showModal == false,
+    }"
     id="modal"
-   
   >
     <div
       class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
       <div class="fixed inset-0 transition-opacity">
-        <div class="animate-fade-in-down absolute inset-0 bg-gray-900 opacity-75"></div>
+        <div
+          class="animate-fade-in-down absolute inset-0 bg-gray-900 opacity-75"
+        ></div>
       </div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
         >&#8203;</span
@@ -251,11 +319,38 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
       </div>
     </div>
   </div>
+
+  <!-- <div class="m-5 text-white" v-show="hintstatus == 'present'">
+    <p>Almost there</p>
+  </div>
+
+  <div class="m-5 text-white" v-show="hintstatus == 'correct'">
+    <p>Correct</p>
+  </div> -->
+
+ <div :class="{'overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full' : true,
+            'hidden' : howto === false}">
+
+    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow" >
+            <!-- Modal header -->
+            <div class="flex justify-end p-2">
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" @click="howto = !howto">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 pt-0 text-center">
+                <h1 class="uppercase">How to</h1>
+
+            </div>
+        </div>
+    </div>
+</div>
 </template>
 
 <style>
-
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
@@ -266,14 +361,21 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
   animation: 1.2s linear popup;
 }
 
-
 @keyframes popup {
-        0%   { transform: scale(1,1)    translateY(-10px); }
-        10%  { transform: scale(1.1,.9) translateY(0); }
-        30%  { transform: scale(.9,1.1) translateY(0); }
-        50%  { transform: scale(1,1)    translateY(0); }
-        100% { transform: scale(1,1)    translateY(0); }
-  
+  0% {
+    transform: scale(1, 1) translateY(-10px);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateY(0);
+  }
+  50% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
 }
-
 </style>
