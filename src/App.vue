@@ -196,7 +196,7 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
   </div>
 
   <div
-    class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden"
+    class="animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0 hidden"
     id="modal"
   >
     <div
