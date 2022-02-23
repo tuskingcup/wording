@@ -43,6 +43,7 @@ const board = reactive([
     evalution: []
   }
 ])
+
 const words = computed(() => {
   const wordList = []
   for (const wb of board) {
@@ -88,25 +89,28 @@ const checkInput = () => {
     gameIsEnd.value = gameStatus.fail;
     toggleModal();
   }
-
   inputWord.value = '';
 };
 
 const checkAnswer = () => {
   const evaList = [];
-  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+  const correctList=[0,0,0,0,0,0];
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++){
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList.push(evalueteStatus.correct);
-    } else {
-      for (const rand of randomWord.value) {
-        if (inputWord.value[inputIdx] === rand) {
-          evaList.push(evalueteStatus.present);
+      evaList[inputIdx]=(evalueteStatus.correct)
+      correctList[inputIdx] = 1
+    }
+  }
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
+      for (let randIdx = 0; randIdx < inputWord.value.length; randIdx++) {
+        if (inputWord.value[inputIdx] === randomWord.value[randIdx]&&correctList[randIdx]===0) {
+          evaList[inputIdx]=evalueteStatus.present;
           break;
         }
       }
-    }
-    if (evaList.length === inputIdx) {
-      evaList.push(evalueteStatus.absent);
+    
+    if (evaList[inputIdx] === undefined) {
+      evaList[inputIdx] = evalueteStatus.absent;
     }
   }
   return evaList;
@@ -139,24 +143,29 @@ const iconSunMoon = {
   moon: '/public/moon.png',
 };
 
-const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorage.getItem("theme")=='cupcake')
-</script>
+const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : localStorage.getItem("theme") == 'cmyk')
+
+</script> 
 
 <template>
-  <div class="animate-pulse font-serif font-bold text-6xl">
+
+<!-- Header -->
+<div class="flex justify-center">
+  <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
     <h1 class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700">WORDLE</h1>
   </div>
-
-  <div class="mt-5">
+  <div class="absolute top-10 right-12">
     <!-- <button type="button" @click="toggleTheme() "> -->
-    <button data-toggle-theme="cupcake,laxury" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
+    <button data-toggle-theme="cmyk,luxury" data-act-class="ACTIVECLASS" class="animate-fade-in-down" @click="checkTheme = !checkTheme">
       <img
-        class="h-8"
+        class="h-10 hover:scale-110"
         :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
       />
     </button>
   </div>
 
+<!-- Input Text Box -->
+</div>
   <div class="flex justify-center">
     <div class="form-control">
       <input
@@ -174,19 +183,22 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
     </div>
   </div>
 
+
+<!-- Error Message -->
   <div class="animate-fade-in-down fixed inset-x-0 mt-5" v-show="gameIsEnd === gameStatus.error">
     <p class="animate-bounce text-amber-600" >Don't have this word!</p>
   </div>
 
+<!-- Show Input Word -->
   <div class="text-blue-400 flex items-center justify-center mt-12">
     <div class="grid grid-cols-5 gap-4">
       <div
         class="p-5 rounded list-none uppercase"
         :class="{
-          'bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
+          'animate-fade-in-down bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
           'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
-          'bg-amber-300': evalutes[index] == evalueteStatus.present,
+          'animate-fade-in-down bg-amber-300': evalutes[index] == evalueteStatus.present,
         }"
         v-for="(boards, index) in words"
       >
@@ -195,6 +207,7 @@ const checkTheme = ref(localStorage.getItem("theme")==undefined?true:localStorag
     </div>
   </div>
 
+<!-- Modal Win & Lose -->
   <div
     class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden"
     id="modal"
