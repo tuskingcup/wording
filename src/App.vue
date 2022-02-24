@@ -14,6 +14,9 @@ const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
 const inputWord = ref('')
 const round = ref(0)
 const gameIsEnd = ref(gameStatus.progress)
+let howto = ref(false);
+let hintstatus = ref('');
+const showModal = ref(false);
 
 const checkError = ref(false)
 
@@ -45,33 +48,32 @@ const board = reactive([
 ])
 
 const words = computed(() => {
-  const wordList = []
+  const wordList = [];
   for (const wb of board) {
     if (wb.bordState !== '') {
-      wordList.push(...wb.bordState.split(''))
+      wordList.push(...wb.bordState.split(''));
     }
   }
-  return wordList
-})
+  return wordList;
+});
 const evalutes = computed(() => {
-  const evaluteList = []
+  const evaluteList = [];
   for (const eb of board) {
     if (eb.evalution !== '') {
-      evaluteList.push(...eb.evalution)
+      evaluteList.push(...eb.evalution);
     }
   }
-  return evaluteList
-})
-console.log(randomWord.value)
+  return evaluteList;
+});
+console.log(randomWord.value);
 
 const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
-    setWord()
-    round.value++
-    console.log('you win')
-    checkError.value = false
-    gameIsEnd.value = gameStatus.win
-    toggleModal()
+    setWord();
+    round.value++;
+    console.log('you win');
+    gameIsEnd.value = gameStatus.win;
+    showModal.value = true;
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
@@ -84,42 +86,45 @@ const checkInput = () => {
     gameIsEnd.value = gameStatus.error;
     console.log(`${round.value} don't have this word`);
   }
-
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
-    toggleModal();
+    showModal.value = true;
   }
   inputWord.value = '';
 };
 
 const checkAnswer = () => {
   const evaList = [];
-  const correctList=[0,0,0,0,0,0];
-  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++){
+  const correctList = [0, 0, 0, 0, 0, 0];
+  for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList[inputIdx]=(evalueteStatus.correct)
-      correctList[inputIdx] = 1
+      evaList[inputIdx] = evalueteStatus.correct;
+      hintstatus.value = evalueteStatus.correct;
+      correctList[inputIdx] = 1;
     }
   }
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
-      for (let randIdx = 0; randIdx < inputWord.value.length; randIdx++) {
-        if (inputWord.value[inputIdx] === randomWord.value[randIdx]&&correctList[randIdx]===0) {
-          evaList[inputIdx]=evalueteStatus.present;
-          break;
-        }
+    for (let randIdx = 0; randIdx < inputWord.value.length; randIdx++) {
+      if (
+        inputWord.value[inputIdx] === randomWord.value[randIdx] &&
+        correctList[randIdx] == 0
+      ) {
+        evaList[inputIdx] = evalueteStatus.present;
+        hintstatus.value = evalueteStatus.present;
+        break;
       }
-    
+    }
     if (evaList[inputIdx] === undefined) {
       evaList[inputIdx] = evalueteStatus.absent;
     }
   }
   return evaList;
 };
-
 const setWord = () => {
   board[round.value].bordState = inputWord.value;
   board[round.value].evalution = checkAnswer();
 };
+
 
 const reset = () => {
   board.forEach((e) => {
@@ -129,26 +134,24 @@ const reset = () => {
   round.value = 0;
   gameIsEnd.value = gameStatus.progress;
   randomWord.value = word1[Math.floor(Math.random() * 2315)];
-  toggleModal();
+  showModal.value = false;
   console.log(randomWord.value);
   // console.log(board)
 };
 
-function toggleModal() {
-  document.getElementById('modal').classList.toggle('hidden');
-}
 
 const iconSunMoon = {
-  sun: '/public/sun.png',
-  moon: '/public/moon.png',
+  sun: '/sun.png',
+  moon: '/moon.png',
 };
 
 const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : localStorage.getItem("theme") == 'cmyk')
 
+
 </script> 
 
 <template>
-
+<img src="/question-mark.png" class="absolute top-10 left-12 h-12 hover:scale-110" @click="howto = !howto">
 <!-- Header -->
 <div class="flex justify-center">
   <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
@@ -193,7 +196,7 @@ const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : local
   <div class="text-blue-400 flex items-center justify-center mt-12">
     <div class="grid grid-cols-5 gap-4">
       <div
-        class="p-5 rounded list-none uppercase"
+        class="p-5 rounded uppercase"
         :class="{
           'animate-fade-in-down bg-white border-2 border-gray-300': evalutes[index] == evalueteStatus.absent,
           'animation-pop-correct bg-green-300':
@@ -209,7 +212,10 @@ const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : local
 
 <!-- Modal Win & Lose -->
   <div
-    class="animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0 hidden"
+    :class="{
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0': true,
+      hidden: showModal == false,
+    }"
     id="modal"
   >
     <div
@@ -258,6 +264,55 @@ const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : local
       </div>
     </div>
   </div>
+
+  <div :class="{'animate-fade-in-down overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-20 h-modal sm:h-full' : true,
+            'hidden' : howto === false}">
+    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <div class="flex justify-end p-2">
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" @click="howto = !howto">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                </button>
+            </div>
+            <!-- Modal body -->
+          <h1 class="mb-5 uppercase">How to</h1>
+            <div class="text-justify">
+              <div class="break-words px-5">
+                <p>ข้อความชุดแรก</p>
+              </div>
+                <div class="text-blue-400 flex items-center justify-center mt-5">
+                  <div class="grid grid-cols-5 gap-4 rounded uppercase">
+                      <p class="s p-5 rounded bg-green-300">s</p>
+                      <p class="l p-5 rounded bg-green-300">l</p>
+                      <p class="p-5 rounded bg-amber-300">e</p>
+                      <p class="p-5 rounded bg-white border-2 border-gray-300">e</p>
+                      <p class="p-5 rounded bg-white border-2 border-gray-300">p</p>
+                  </div>
+                </div>
+
+              <div class="break-words px-5 mt-5">
+                <p>ข้อความชุดสอง</p>
+              </div>
+                <div class="text-blue-400 flex items-center justify-center mt-5">
+                  <div class="grid grid-cols-5 gap-4 rounded uppercase">
+                      <p class="sc p-5 rounded bg-green-300">s</p>
+                      <p class="l p-5 rounded bg-green-300">l</p>
+                      <p class="o p-5 rounded bg-green-300">o</p>
+                      <p class="v p-5 rounded bg-green-300">v</p>
+                      <p class="e p-5 rounded bg-green-300">e</p>
+                  </div>
+                </div>
+
+
+                <div class="break-words px-5 mt-5">
+                <p>ข้อความชุดสาม</p>
+              </div>
+                <p class="mt-5 animate-bounce font-medium text-amber-600 text-center text-lg" >Don't have this word !</p>
+            </div>
+        </div>
+    </div>
+</div>
 </template>
 
 <style>
@@ -273,6 +328,35 @@ const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : local
   animation: 1.2s linear popup;
 }
 
+.s,.sc,.l,.o,.v,.e {
+  animation: alternate-reverse popup;
+  animation-iteration-count: infinite;
+}
+
+.s {
+  animation-duration: 1s;
+}
+
+.sc {
+  animation-duration: 1.5s;
+}
+
+.l {
+  animation-duration: 2s;
+}
+
+.o {
+  animation-duration: 3s;
+}
+
+.v {
+  animation-duration: 4s;
+}
+
+.e {
+  animation-duration: 5s;
+}
+
 @keyframes popup {
         0%   { transform: scale(1,1)    translateY(-10px); }
         10%  { transform: scale(1.1,.9) translateY(0); }
@@ -281,5 +365,6 @@ const checkTheme = ref(localStorage.getItem("theme") == undefined ? true : local
         100% { transform: scale(1,1)    translateY(0); }
   
 }
+
 
 </style>
