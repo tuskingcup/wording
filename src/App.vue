@@ -7,18 +7,16 @@ const evalueteStatus = {
   correct: 'correct',
   absent: 'absent',
 };
-const gameStatus = {
-  progress: 'progress',
-  win: 'win',
-  fail: 'fail',
-  error: 'error',
-};
+const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' };
 const word1 = word.word1;
 const word2 = word.word2;
 const randomWord = ref(word1[Math.floor(Math.random() * 2315)]);
 const inputWord = ref('');
 const round = ref(0);
 const gameIsEnd = ref(gameStatus.progress);
+let howto = ref(false);
+let hintstatus = ref('');
+const showModal = ref(false);
 
 const checkError = ref(false);
 
@@ -48,6 +46,7 @@ const board = reactive([
     evalution: [],
   },
 ]);
+
 const words = computed(() => {
   const wordList = [];
   for (const wb of board) {
@@ -87,12 +86,10 @@ const checkInput = () => {
     gameIsEnd.value = gameStatus.error;
     console.log(`${round.value} don't have this word`);
   }
-
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
     showModal.value = true;
   }
-
   inputWord.value = '';
 };
 
@@ -119,7 +116,6 @@ const checkInput = () => {
 const checkAnswer = () => {
   const evaList = [];
   const correctList = [0, 0, 0, 0, 0, 0];
-
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
       evaList[inputIdx] = evalueteStatus.correct;
@@ -138,14 +134,12 @@ const checkAnswer = () => {
         break;
       }
     }
-
     if (evaList[inputIdx] === undefined) {
       evaList[inputIdx] = evalueteStatus.absent;
     }
   }
   return evaList;
 };
-
 const setWord = () => {
   board[round.value].bordState = inputWord.value;
   board[round.value].evalution = checkAnswer();
@@ -164,8 +158,6 @@ const reset = () => {
   // console.log(board)
 };
 
-const showModal = ref(false);
-
 const iconSunMoon = {
   sun: '/sun.png',
   moon: '/moon.png',
@@ -174,54 +166,42 @@ const iconSunMoon = {
 const checkTheme = ref(
   localStorage.getItem('theme') == undefined
     ? true
-    : localStorage.getItem('theme') == 'cupcake'
+    : localStorage.getItem('theme') == 'cmyk'
 );
-
-let hintstatus = ref('');
-
-// const checkHint = computed(() => {
-//   for (const b of board) {
-//      if(b.evalution.some(e => e == evalueteStatus.present && evalueteStatus.correct)){
-//        hintstatus.value = 'almost'
-//      }
-
-//   }
-//   return hintstatus.value
-// })
-
-let howto = ref(false);
-
 </script>
 
 <template>
+  <img
+    src="/question-mark.png"
+    class="absolute top-10 left-12 h-9 hover:scale-110"
+    @click="howto = !howto"
+  />
+  <!-- Header -->
+  <div class="flex justify-center">
+    <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
+      <h1
+        class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700"
+      >
+        WORDLE
+      </h1>
+    </div>
+    <div class="absolute top-10 right-12">
+      <!-- <button type="button" @click="toggleTheme() "> -->
+      <button
+        data-toggle-theme="cmyk,laxury"
+        data-act-class="ACTIVECLASS"
+        class="animate-fade-in-down"
+        @click="checkTheme = !checkTheme"
+      >
+        <img
+          class="h-10 hover:scale-110"
+          :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
+        />
+      </button>
+    </div>
 
-<div class="m-5">
- 
-  <img src="/question-mark.png" class="m-5 h-11 w-auto cursor-pointer" @click="howto = !howto">
-  
-  <div class="animate-pulse font-serif font-bold text-6xl">
-    <h1
-      class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700"
-    >
-      WORDLE
-    </h1>
+    <!-- Input Text Box -->
   </div>
-</div>
-  <div class="mt-5">
-    <!-- <button type="button" @click="toggleTheme() "> -->
-    <button
-      data-toggle-theme="cupcake,laxury"
-      data-act-class="ACTIVECLASS"
-      class="animate-fade-in-down"
-      @click="checkTheme = !checkTheme"
-    >
-      <img
-        class="h-8"
-        :src="checkTheme === true ? iconSunMoon.sun : iconSunMoon.moon"
-      />
-    </button>
-  </div>
-
   <div class="flex justify-center">
     <div class="form-control">
       <input
@@ -239,6 +219,7 @@ let howto = ref(false);
     </div>
   </div>
 
+  <!-- Error Message -->
   <div
     class="animate-fade-in-down fixed inset-x-0 mt-5"
     v-show="gameIsEnd === gameStatus.error"
@@ -246,16 +227,18 @@ let howto = ref(false);
     <p class="animate-bounce text-amber-600">Don't have this word!</p>
   </div>
 
+  <!-- Show Input Word -->
   <div class="text-blue-400 flex items-center justify-center mt-12">
     <div class="grid grid-cols-5 gap-4">
       <div
-        class="p-5 rounded list-none uppercase"
+        class="p-5 rounded uppercase"
         :class="{
-          'bg-white border-2 border-gray-300':
+          'animate-fade-in-down bg-white border-2 border-gray-300':
             evalutes[index] == evalueteStatus.absent,
           'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
-          'bg-amber-300': evalutes[index] == evalueteStatus.present,
+          'animate-fade-in-down bg-amber-300':
+            evalutes[index] == evalueteStatus.present,
         }"
         v-for="(boards, index) in words"
       >
@@ -264,9 +247,10 @@ let howto = ref(false);
     </div>
   </div>
 
+  <!-- Modal Win & Lose -->
   <div
     :class="{
-      'animate-fade-in-down fixed z-10 overflow-y-auto top-0 w-full left-0': true,
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-5 w-full left-0': true,
       hidden: showModal == false,
     }"
     id="modal"
@@ -320,34 +304,96 @@ let howto = ref(false);
     </div>
   </div>
 
-  <!-- <div class="m-5 text-white" v-show="hintstatus == 'present'">
-    <p>Almost there</p>
-  </div>
-
-  <div class="m-5 text-white" v-show="hintstatus == 'correct'">
-    <p>Correct</p>
-  </div> -->
-
- <div :class="{'overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full' : true,
-            'hidden' : howto === false}">
-
-    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow" >
-            <!-- Modal header -->
-            <div class="flex justify-end p-2">
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" @click="howto = !howto">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
-                </button>
-            </div>
-            <!-- Modal body -->
-            <div class="p-6 pt-0 text-center">
-                <h1 class="uppercase">How to</h1>
-
-            </div>
+  <div
+    :class="{
+      'animate-fade-in-down overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-20 h-modal sm:h-full ': true,
+      hidden: howto === false,
+    }"
+  >
+    <div class="relative px-4 w-full max-w-md h-full md:h-auto ">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow p-5">
+        <div class="flex justify-end p-2">
+          <button
+            type="button"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+            @click="howto = !howto"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
         </div>
+        <!-- Modal body -->
+        <h1 class="mb-5 uppercase font-semibold">How to play</h1>
+        <div class="text-justify">
+          <div class="m-5">
+            <p>Guess the <span class="font-semibold">WORDLE</span> in six tries.</p>
+            <p>
+              Each guess must be a valid five-letter word. Hit the enter button
+              to submit.
+            </p>
+            <p>
+              After each guess, the color of the tiles will change to show how
+              close your guess was to the word.
+            </p>
+          </div>
+          <p class="m-5 font-semibold">Example</p>
+
+          <div class="text-blue-400 flex items-center justify-center mt-5">
+            <div class="grid grid-cols-5 gap-4 rounded uppercase">
+              <p class="p-5 rounded bg-white border-2 border-gray-300">d</p>
+              <p class="p-5 rounded bg-white border-2 border-gray-300">i</p>
+              <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
+              <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
+              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">y</p>
+            </div>
+          </div>
+
+          <div class="break-words px-5 mt-5">
+            <p>The letter <span class="font-semibold">Y</span> is in the word and in the correct spot.</p>
+          </div>
+
+          <div class="text-blue-400 flex items-center justify-center mt-5">
+            <div class="grid grid-cols-5 gap-4 rounded uppercase">
+              <p class="p-5 rounded bg-white border-2 border-gray-300">m</p>
+              <p class="p-5 rounded bg-white border-2 border-gray-300">a</p>
+              <p class="p-5 rounded bg-white border-2 border-gray-300">j</p>
+              <p class="o p-5 rounded bg-yellow-300 border-2 border-gray-300">
+                o
+              </p>
+              <p class="p-5 rounded bg-white border-2 border-gray-300">r</p>
+            </div>
+          </div>
+          <div class="break-words px-5 mt-5">
+            <p>The letter <span class="font-semibold">O</span> is in the word but in the wrong spot.</p>
+          </div>
+
+          <div class="text-blue-400 flex items-center justify-center mt-5">
+            <div class="grid grid-cols-5 gap-4 rounded uppercase">
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">a</p>
+              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">r</p>
+              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">r</p>
+              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">o</p>
+              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">w</p>
+            </div>
+          </div>
+          <div class="break-words px-5 mt-5">
+            <p><span class="font-semibold">No letter </span>in the word</p>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <style>
@@ -360,6 +406,28 @@ let howto = ref(false);
 .animation-pop-correct {
   animation: 1.2s linear popup;
 }
+
+.y,
+.o,
+.arrow
+{
+  animation: alternate-reverse popup;
+  animation-iteration-count: infinite;
+}
+
+.y {
+  animation-duration: 1.5s;
+}
+
+.o {
+  animation-duration: 1.5s;
+}
+
+.arrow{
+  animation-duration: 1.5s;
+}
+
+
 
 @keyframes popup {
   0% {
