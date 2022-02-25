@@ -197,7 +197,7 @@ const checkTheme = ref(
       />
     </svg>
     <div
-      class="opacity-0 p-7 bg-base-200 w-32 absolute rounded-md group-hover:opacity-100 duration-300 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center text-white"
+      class="invisible group-hover:visible p-7 bg-base-200 w-32 absolute rounded-md duration-100 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center text-white"
     >
       <p>Win : {{ winScore }} Loses : {{loseScore}}</p>
     </div>
