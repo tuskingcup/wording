@@ -1,97 +1,102 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
-import { word } from './word.json';
+import { ref, reactive, computed } from 'vue'
+import { word } from './word.json'
 
 const evalueteStatus = {
   present: 'present',
   correct: 'correct',
-  absent: 'absent',
-};
-const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' };
-const word1 = word.word1;
-const word2 = word.word2;
-const randomWord = ref(word1[Math.floor(Math.random() * 2315)]);
-const inputWord = ref('');
-const round = ref(0);
-const gameIsEnd = ref(gameStatus.progress);
-let howto = ref(false);
-let hintstatus = ref('');
-const showModal = ref(false);
+  absent: 'absent'
+}
+const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' }
+const word1 = word.word1
+const word2 = word.word2
+const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
+const inputWord = ref('')
+const round = ref(0)
+const gameIsEnd = ref(gameStatus.progress)
+const howto = ref(false)
+const hintstatus = ref('')
+let winScore = ref(0)
+let loseScore = ref(0)
+const showModal = ref(false)
 
-const checkError = ref(false);
+const checkError = ref(false)
 
 const board = reactive([
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
+    evalution: []
   },
   {
     bordState: '',
-    evalution: [],
-  },
-]);
+    evalution: []
+  }
+])
 
 const words = computed(() => {
-  const wordList = [];
+  const wordList = []
   for (const wb of board) {
     if (wb.bordState !== '') {
-      wordList.push(...wb.bordState.split(''));
+      wordList.push(...wb.bordState.split(''))
     }
   }
-  return wordList;
-});
+  return wordList
+})
 const evalutes = computed(() => {
-  const evaluteList = [];
+  const evaluteList = []
   for (const eb of board) {
     if (eb.evalution !== '') {
-      evaluteList.push(...eb.evalution);
+      evaluteList.push(...eb.evalution)
     }
   }
-  return evaluteList;
-});
-console.log(randomWord.value);
+  return evaluteList
+})
+console.log(randomWord.value)
 
 const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
-    setWord();
-    round.value++;
-    console.log('you win');
-    gameIsEnd.value = gameStatus.win;
-    showModal.value = true;
+    setWord()
+    round.value++
+    setTimeout(() => (winScore.value += 1), 1500)
+    console.log('you win')
+    gameIsEnd.value = gameStatus.win
+    showModal.value = true
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
   ) {
-    setWord();
-    round.value++;
-    gameIsEnd.value = gameStatus.progress;
-    console.log(`${round.value} Try Again`);
+    setWord()
+    round.value++
+    gameIsEnd.value = gameStatus.progress
+    console.log(`${round.value} Try Again`)
   } else {
-    gameIsEnd.value = gameStatus.error;
-    console.log(`${round.value} don't have this word`);
+    gameIsEnd.value = gameStatus.error
+    console.log(`${round.value} don't have this word`)
   }
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
-    gameIsEnd.value = gameStatus.fail;
-    showModal.value = true;
+    gameIsEnd.value = gameStatus.fail
+    showModal.value = true
+    setTimeout(() => (loseScore.value += 1), 1500)
+    console.log(loseScore.value)
   }
-  inputWord.value = '';
-};
+  inputWord.value = ''
+}
 
 // const checkAnswer = () => {
 //   const evaList = [];
@@ -114,13 +119,13 @@ const checkInput = () => {
 // };
 
 const checkAnswer = () => {
-  const evaList = [];
-  const correctList = [0, 0, 0, 0, 0, 0];
+  const evaList = []
+  const correctList = [0, 0, 0, 0, 0, 0]
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList[inputIdx] = evalueteStatus.correct;
-      hintstatus.value = evalueteStatus.correct;
-      correctList[inputIdx] = 1;
+      evaList[inputIdx] = evalueteStatus.correct
+      hintstatus.value = evalueteStatus.correct
+      correctList[inputIdx] = 1
     }
   }
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
@@ -129,45 +134,45 @@ const checkAnswer = () => {
         inputWord.value[inputIdx] === randomWord.value[randIdx] &&
         correctList[randIdx] == 0
       ) {
-        evaList[inputIdx] = evalueteStatus.present;
-        hintstatus.value = evalueteStatus.present;
-        break;
+        evaList[inputIdx] = evalueteStatus.present
+        hintstatus.value = evalueteStatus.present
+        break
       }
     }
     if (evaList[inputIdx] === undefined) {
-      evaList[inputIdx] = evalueteStatus.absent;
+      evaList[inputIdx] = evalueteStatus.absent
     }
   }
-  return evaList;
-};
+  return evaList
+}
 const setWord = () => {
-  board[round.value].bordState = inputWord.value;
-  board[round.value].evalution = checkAnswer();
-};
+  board[round.value].bordState = inputWord.value
+  board[round.value].evalution = checkAnswer()
+}
 
 const reset = () => {
   board.forEach((e) => {
-    e.bordState = '';
-    e.evalution = [];
-  });
-  round.value = 0;
-  gameIsEnd.value = gameStatus.progress;
-  randomWord.value = word1[Math.floor(Math.random() * 2315)];
-  showModal.value = false;
-  console.log(randomWord.value);
+    e.bordState = ''
+    e.evalution = []
+  })
+  round.value = 0
+  gameIsEnd.value = gameStatus.progress
+  randomWord.value = word1[Math.floor(Math.random() * 2315)]
+  showModal.value = false
+  console.log(randomWord.value)
   // console.log(board)
-};
+}
 
 const iconSunMoon = {
   sun: '/sun.png',
-  moon: '/moon.png',
-};
+  moon: '/moon.png'
+}
 
 const checkTheme = ref(
   localStorage.getItem('theme') == undefined
     ? true
     : localStorage.getItem('theme') == 'cmyk'
-);
+)
 </script>
 
 <template>
@@ -176,6 +181,27 @@ const checkTheme = ref(
     class="absolute top-10 left-12 h-9 hover:scale-110"
     @click="howto = !howto"
   />
+  <div class="group absolute top-10 right-36">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="absolute h-10 hover:scale-110"
+      fill="white"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+      />
+    </svg>
+    <div
+      class="opacity-0 p-7 bg-base-200 w-32 absolute rounded-md group-hover:opacity-100 duration-300 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center text-white"
+    >
+      <p>Win : {{ winScore }} Loses : {{loseScore}}</p>
+    </div>
+  </div>
   <!-- Header -->
   <div class="flex justify-center">
     <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
@@ -238,7 +264,7 @@ const checkTheme = ref(
           'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
           'animate-fade-in-down bg-amber-300':
-            evalutes[index] == evalueteStatus.present,
+            evalutes[index] == evalueteStatus.present
         }"
         v-for="(boards, index) in words"
       >
@@ -250,8 +276,8 @@ const checkTheme = ref(
   <!-- Modal Win & Lose -->
   <div
     :class="{
-      'animate-fade-in-down fixed z-10 overflow-y-auto top-5 w-full left-0': true,
-      hidden: showModal == false,
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0': true,
+      hidden: showModal == false
     }"
     id="modal"
   >
@@ -273,11 +299,19 @@ const checkTheme = ref(
         aria-labelledby="modal-headline"
       >
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
-          <h1 class="text-3xl text-center uppercase mt-5">
-            {{
-              gameIsEnd === gameStatus.win ? `Congratulations !!` : `You Fail`
-            }}
-          </h1>
+          <div
+            v-if="gameIsEnd === gameStatus.win"
+            class="text-center uppercase"
+          >
+            <h1 class="text-3xl mt-5">Congratulations !!</h1>
+            <p class="mt-3">Score</p>
+            <p class="text-2xl font-bold">{{ winScore }}</p>
+          </div>
+          <div v-else class="text-center uppercase">
+            <h1 class="text-3xl mt-5">You Fail</h1>
+            <p class="mt-3">Loses</p>
+            <p class="text-2xl font-bold">{{ loseScore }}</p>
+          </div>
           <p class="text-center uppercase mt-4">
             Answer : <strong>{{ randomWord }}</strong>
           </p>
@@ -307,10 +341,10 @@ const checkTheme = ref(
   <div
     :class="{
       'animate-fade-in-down overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-20 h-modal sm:h-full ': true,
-      hidden: howto === false,
+      hidden: howto === false
     }"
   >
-    <div class="relative px-4 w-full max-w-md h-full md:h-auto ">
+    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow p-5">
         <div class="flex justify-end p-2">
@@ -337,7 +371,9 @@ const checkTheme = ref(
         <h1 class="mb-5 uppercase font-semibold">How to play</h1>
         <div class="text-justify">
           <div class="m-5">
-            <p>Guess the <span class="font-semibold">WORDLE</span> in six tries.</p>
+            <p>
+              Guess the <span class="font-semibold">WORDLE</span> in six tries.
+            </p>
             <p>
               Each guess must be a valid five-letter word. Hit the enter button
               to submit.
@@ -355,12 +391,17 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">i</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
-              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">y</p>
+              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">
+                y
+              </p>
             </div>
           </div>
 
           <div class="break-words px-5 mt-5">
-            <p>The letter <span class="font-semibold">Y</span> is in the word and in the correct spot.</p>
+            <p>
+              The letter <span class="font-semibold">Y</span> is in the word and
+              in the correct spot.
+            </p>
           </div>
 
           <div class="text-blue-400 flex items-center justify-center mt-5">
@@ -375,16 +416,29 @@ const checkTheme = ref(
             </div>
           </div>
           <div class="break-words px-5 mt-5">
-            <p>The letter <span class="font-semibold">O</span> is in the word but in the wrong spot.</p>
+            <p>
+              The letter <span class="font-semibold">O</span> is in the word but
+              in the wrong spot.
+            </p>
           </div>
 
           <div class="text-blue-400 flex items-center justify-center mt-5">
             <div class="grid grid-cols-5 gap-4 rounded uppercase">
-              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">a</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">r</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">r</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">o</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">w</p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                a
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                r
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                r
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                o
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                w
+              </p>
             </div>
           </div>
           <div class="break-words px-5 mt-5">
@@ -409,25 +463,10 @@ const checkTheme = ref(
 
 .y,
 .o,
-.arrow
-{
-  animation: alternate-reverse popup;
+.arrow {
+  animation: 1.5s alternate-reverse popup;
   animation-iteration-count: infinite;
 }
-
-.y {
-  animation-duration: 1.5s;
-}
-
-.o {
-  animation-duration: 1.5s;
-}
-
-.arrow{
-  animation-duration: 1.5s;
-}
-
-
 
 @keyframes popup {
   0% {

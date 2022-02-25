@@ -5,6 +5,7 @@ module.exports = {
     ],
     theme: {
       extend: {
+        visibility: ["group-hover"],
           keyframes: {
               'fade-in-down': {
                   '0%': {
@@ -20,5 +21,5 @@ module.exports = {
           },   
       },
   },
-    plugins: [require('daisyui'),("tailwindcss-animation-delay")],
+    plugins: [require('daisyui'),],
   }
