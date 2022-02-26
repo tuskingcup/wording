@@ -185,19 +185,19 @@ const checkTheme = ref(
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="absolute h-10 hover:scale-110"
-      fill="white"
+      fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
     >
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
-        stroke-width="2"
+        stroke-width="1"
         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
       />
     </svg>
     <div
-      class="invisible group-hover:visible p-7 bg-base-200 w-32 absolute rounded-md duration-100 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center text-white"
+      class="invisible group-hover:visible p-7 bg-base-300 w-32 absolute rounded-md duration-100 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center"
     >
       <p>Win : {{ winScore }} Loses : {{loseScore}}</p>
     </div>
@@ -214,7 +214,7 @@ const checkTheme = ref(
     <div class="absolute top-10 right-12">
       <!-- <button type="button" @click="toggleTheme() "> -->
       <button
-        data-toggle-theme="cmyk,laxury"
+        data-toggle-theme="cmyk,halloween"
         data-act-class="ACTIVECLASS"
         class="animate-fade-in-down"
         @click="checkTheme = !checkTheme"
@@ -298,7 +298,7 @@ const checkTheme = ref(
         aria-modal="true"
         aria-labelledby="modal-headline"
       >
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
+        <div class="bg-base-300 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
           <div
             v-if="gameIsEnd === gameStatus.win"
             class="text-center uppercase"
@@ -316,7 +316,7 @@ const checkTheme = ref(
             Answer : <strong>{{ randomWord }}</strong>
           </p>
         </div>
-        <div class="bg-gray-200 px-4 py-3 text-right">
+        <div class="bg-base-100 px-4 py-3 text-right">
           <button @click="reset()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -338,19 +338,19 @@ const checkTheme = ref(
     </div>
   </div>
 
-  <div
+ <div
     :class="{
-      'animate-fade-in-down overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-20 h-modal sm:h-full ': true,
+      'animate-fade-in-down overflow-x-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
       hidden: howto === false
     }"
   >
-    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
+    <div class="relative px-3 w-full max-w-md h-full md:h-auto">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow p-5">
-        <div class="flex justify-end p-2">
+      <div class="relative bg-base-300 rounded-lg shadow p-5">
+        <div class="flex justify-end">
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+            class="text-gray-400 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
             @click="howto = !howto"
           >
             <svg
@@ -368,8 +368,8 @@ const checkTheme = ref(
           </button>
         </div>
         <!-- Modal body -->
-        <h1 class="mb-5 uppercase font-semibold">How to play</h1>
-        <div class="text-justify">
+        <h1 class="mb-5 -mt-5 uppercase font-bold text-purple-400">How to play</h1>
+        <div class="text-justify text-purple-400">
           <div class="m-5">
             <p>
               Guess the <span class="font-semibold">WORDLE</span> in six tries.
@@ -454,7 +454,7 @@ const checkTheme = ref(
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  color: #2c3e50;
+  /* color: #2c3e50; */
 }
 
 .animation-pop-correct {
