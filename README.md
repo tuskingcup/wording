@@ -1,8 +1,8 @@
 
 
-# Wordle Simple
+# Wording Simple
 
-## Wordle
+## Wording
 
 เกมเดาคำศัพท์ ต้องเดาคำศัพท์ใหม่ในแต่ละครั้ง มีจำนวนทั้งหมด 6 ครั้ง และในการเดาแต่ละครั้งจะเปิดเผยข้อมูลบางอย่าง
 
@@ -30,8 +30,9 @@
 ### References
 - https://www.nytimes.com/games/wordle/index.html
 - https://workpointtoday.com/what-is-wordle-crossword-game/
+- https://daisyui.com/
 
-### Group: 8 
+### Sec 2 Group 8 
 | No. | Name              | Student ID   |
 |:---:|-------------------|--------------|
 |  1  | นาย นิติภูมิ สุทธไชย    | 63130500071  |
