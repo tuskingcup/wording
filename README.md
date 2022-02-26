@@ -10,7 +10,7 @@
 - เมื่อครบ 5 ตัวอักษรแล้วกด Enter หากตัวอักษรนั้นเป็นตัวอักษรที่ใช่และอยู่ถูกตำแหน่ง ตัวอักษรจะกลายเป็นสีเขียว หากเป็นตัวอักษรที่ใช่ แต่ไม่ถูกตำแหน่ง ตัวอักษรจะกลายเป็นสีเหลือง และถ้าเป็นตัวอักษรที่ไม่ใช่เลย จะกลายเป็นสีขาว
 - ทุกครั้งที่ผู้เล่นทำการเล่นครบจำนวน 6 ครั้ง ระบบจะแสดงผลลัพธ์, คำตอบที่ถูกต้อง และทำการเก็บสถิติจำนวนครั้งที่ แพ้/ชนะ ของผู้เล่นโดยสามารถกดดูได้ที่![toggle_theme](https://github.com/tuskingcup/wording/blob/main/src/assets/themes.jpg)
 ### More
-- Function ในการ toggle เพื่อเปลี่ยน theme พื้นหลัง โดยจะมี 2 สีคือ Light mode, Darkmode สามารถกดเปลี่ยน theme ได้ที่ ![toggle_theme](https://github.com/tuskingcup/wording/blob/main/src/assets/themes.jpg)
+- Function ในการ toggle เพื่อเปลี่ยน theme พื้นหลัง โดยจะมี 2 สีคือ Light mode, Darkmode สามารถกดเปลี่ยน theme ได้ที่ ![toggle_theme](https://www.flaticon.com/free-icons/moon)
 - How to play สำหรับผู้เริ่มต้นเล่น wordle สามารถกดได้ที่ ![howto](https://github.com/tuskingcup/wording/blob/main/src/assets/winlose.jpg)
 
 ## Example
