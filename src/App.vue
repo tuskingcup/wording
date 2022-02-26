@@ -56,6 +56,7 @@ const words = computed(() => {
   }
   return wordList;
 });
+
 const evalutes = computed(() => {
   const evaluteList = [];
   for (const eb of board) {
@@ -220,8 +221,9 @@ const checkTheme = ref(
   </div>
 
   <!-- Error Message -->
+
   <div
-    class="animate-fade-in-down fixed inset-x-0 mt-5"
+    class="animate-fade-out fixed inset-x-0 mt-5"
     v-show="gameIsEnd === gameStatus.error"
   >
     <p class="animate-bounce text-amber-600">Don't have this word!</p>
@@ -304,13 +306,15 @@ const checkTheme = ref(
     </div>
   </div>
 
+
+<!-- Modal How to play -->
   <div
     :class="{
       'animate-fade-in-down overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-20 h-modal sm:h-full ': true,
       hidden: howto === false,
     }"
   >
-    <div class="relative px-4 w-full max-w-md h-full md:h-auto ">
+    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow p-5">
         <div class="flex justify-end p-2">
@@ -337,7 +341,9 @@ const checkTheme = ref(
         <h1 class="mb-5 uppercase font-semibold">How to play</h1>
         <div class="text-justify">
           <div class="m-5">
-            <p>Guess the <span class="font-semibold">WORDLE</span> in six tries.</p>
+            <p>
+              Guess the <span class="font-semibold">WORDLE</span> in six tries.
+            </p>
             <p>
               Each guess must be a valid five-letter word. Hit the enter button
               to submit.
@@ -355,12 +361,17 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">i</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
-              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">y</p>
+              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">
+                y
+              </p>
             </div>
           </div>
 
           <div class="break-words px-5 mt-5">
-            <p>The letter <span class="font-semibold">Y</span> is in the word and in the correct spot.</p>
+            <p>
+              The letter <span class="font-semibold">Y</span> is in the word and
+              in the correct spot.
+            </p>
           </div>
 
           <div class="text-blue-400 flex items-center justify-center mt-5">
@@ -375,16 +386,29 @@ const checkTheme = ref(
             </div>
           </div>
           <div class="break-words px-5 mt-5">
-            <p>The letter <span class="font-semibold">O</span> is in the word but in the wrong spot.</p>
+            <p>
+              The letter <span class="font-semibold">O</span> is in the word but
+              in the wrong spot.
+            </p>
           </div>
 
           <div class="text-blue-400 flex items-center justify-center mt-5">
             <div class="grid grid-cols-5 gap-4 rounded uppercase">
-              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">a</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">r</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">r</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">o</p>
-              <p class="arrow  p-5 rounded bg-white border-2 border-gray-300">w</p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                a
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                r
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                r
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                o
+              </p>
+              <p class="arrow p-5 rounded bg-white border-2 border-gray-300">
+                w
+              </p>
             </div>
           </div>
           <div class="break-words px-5 mt-5">
@@ -409,8 +433,7 @@ const checkTheme = ref(
 
 .y,
 .o,
-.arrow
-{
+.arrow {
   animation: alternate-reverse popup;
   animation-iteration-count: infinite;
 }
@@ -423,11 +446,9 @@ const checkTheme = ref(
   animation-duration: 1.5s;
 }
 
-.arrow{
+.arrow {
   animation-duration: 1.5s;
 }
-
-
 
 @keyframes popup {
   0% {
