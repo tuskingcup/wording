@@ -98,26 +98,6 @@ const checkInput = () => {
   inputWord.value = ''
 }
 
-// const checkAnswer = () => {
-//   const evaList = [];
-//   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
-//     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-//       evaList.push(evalueteStatus.correct);
-//     } else {
-//       for (const rand of randomWord.value) {
-//         if (inputWord.value[inputIdx] === rand) {
-//           evaList.push(evalueteStatus.present);
-//           break;
-//         }
-//       }
-//     }
-//     if (evaList.length === inputIdx) {
-//       evaList.push(evalueteStatus.absent);
-//     }
-//   }
-//   return evaList;
-// };
-
 const checkAnswer = () => {
   const evaList = []
   const correctList = [0, 0, 0, 0, 0, 0]
@@ -171,7 +151,7 @@ const iconSunMoon = {
 const checkTheme = ref(
   localStorage.getItem('theme') == undefined
     ? true
-    : localStorage.getItem('theme') == 'cmyk'
+    : localStorage.getItem('theme') == 'cupcake'
 )
 </script>
 
@@ -206,15 +186,15 @@ const checkTheme = ref(
   <div class="flex justify-center">
     <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
       <h1
-        class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700"
-      >
-        WORDLE
+        class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text"
+       :class="{ 'bg-gradient-to-br from-fuchsia-400 to-fuchsia-900' : checkTheme,'bg-gradient-to-br from-amber-300 to-amber-700' : !checkTheme}">
+        WORDING
       </h1>
     </div>
     <div class="absolute top-10 right-12">
       <!-- <button type="button" @click="toggleTheme() "> -->
       <button
-        data-toggle-theme="cmyk,halloween"
+        data-toggle-theme="halloween,cupcake"
         data-act-class="ACTIVECLASS"
         class="animate-fade-in-down"
         @click="checkTheme = !checkTheme"
@@ -233,7 +213,8 @@ const checkTheme = ref(
       <input
         type="text"
         placeholder="ENTER YOUR WORD !!"
-        class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10"
+        class="input bg-base-200 text-center font-medium tracking-widest uppercase mt-10"
+        :class="{'text-fuchsia-700' : checkTheme,'text-amber-500' : !checkTheme}"
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
@@ -368,11 +349,11 @@ const checkTheme = ref(
           </button>
         </div>
         <!-- Modal body -->
-        <h1 class="mb-5 -mt-5 uppercase font-bold text-purple-400">How to play</h1>
-        <div class="text-justify text-purple-400">
+        <h1 class="mb-5 -mt-5 uppercase font-bold" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">How to play</h1>
+        <div class="text-justify" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">
           <div class="m-5">
             <p>
-              Guess the <span class="font-semibold">WORDLE</span> in six tries.
+              Guess the <span class="font-semibold" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">WORDING</span> in six tries.
             </p>
             <p>
               Each guess must be a valid five-letter word. Hit the enter button
@@ -391,7 +372,7 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">i</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
-              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">
+              <p class="y p-5 rounded bg-green-300">
                 y
               </p>
             </div>
@@ -409,7 +390,7 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">m</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">a</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">j</p>
-              <p class="o p-5 rounded bg-yellow-300 border-2 border-gray-300">
+              <p class="o p-5 rounded bg-yellow-300">
                 o
               </p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">r</p>
@@ -452,7 +433,7 @@ const checkTheme = ref(
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   text-align: center;
   /* color: #2c3e50; */
 }
@@ -461,9 +442,7 @@ const checkTheme = ref(
   animation: 1.2s linear popup;
 }
 
-.y,
-.o,
-.arrow {
+.y,.o,.arrow {
   animation: 1.5s alternate-reverse popup;
   animation-iteration-count: infinite;
 }

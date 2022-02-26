@@ -3,6 +3,9 @@ module.exports = {
       "./index.html",
       "./src/**/*.{vue,js,ts,jsx,tsx}",
     ],
+    daisyui: {
+      themes: ["cupcake","halloween"],
+    },
     theme: {
       extend: {
         visibility: ["group-hover"],
