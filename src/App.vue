@@ -92,7 +92,7 @@ const checkInput = () => {
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail
     showModal.value = true
-    setTimeout(() => (loseScore.value += 1), 1500)
+    setTimeout(() => (loseScore.value += 1), 0)
     console.log(loseScore.value)
   }
   inputWord.value = ''
@@ -321,7 +321,7 @@ const checkTheme = ref(
 
  <div
     :class="{
-      'animate-fade-in-down overflow-x-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
+      'animate-fade-in-down overflow-x-auto fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
       hidden: howto === false
     }"
   >
