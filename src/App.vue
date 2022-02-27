@@ -1,111 +1,111 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { word } from './word.json'
+import { ref, reactive, computed } from 'vue';
+import { word } from './word.json';
 
 const evalueteStatus = {
   present: 'present',
   correct: 'correct',
-  absent: 'absent'
-}
-const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' }
-const word1 = word.word1
-const word2 = word.word2
-const randomWord = ref(word1[Math.floor(Math.random() * 2315)])
-const inputWord = ref('')
-const round = ref(0)
-const gameIsEnd = ref(gameStatus.progress)
-const howto = ref(false)
-const hintstatus = ref('')
-let winScore = ref(0)
-let loseScore = ref(0)
-const showModal = ref(false)
+  absent: 'absent',
+};
+const gameStatus = { progress: 'progress', win: 'win', fail: 'fail' };
+const word1 = word.word1;
+const word2 = word.word2;
+const randomWord = ref(word1[Math.floor(Math.random() * 2315)]);
+const inputWord = ref('');
+const round = ref(0);
+const gameIsEnd = ref(gameStatus.progress);
+const howto = ref(false);
+const hintstatus = ref('');
+let winScore = ref(0);
+let loseScore = ref(0);
+const showModal = ref(false);
 
-const checkError = ref(false)
+const checkError = ref(false);
 
 const board = reactive([
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
+    evalution: [],
   },
   {
     bordState: '',
-    evalution: []
-  }
-])
+    evalution: [],
+  },
+]);
 
 const words = computed(() => {
-  const wordList = []
+  const wordList = [];
   for (const wb of board) {
     if (wb.bordState !== '') {
-      wordList.push(...wb.bordState.split(''))
+      wordList.push(...wb.bordState.split(''));
     }
   }
-  return wordList
-})
+  return wordList;
+});
 const evalutes = computed(() => {
-  const evaluteList = []
+  const evaluteList = [];
   for (const eb of board) {
     if (eb.evalution !== '') {
-      evaluteList.push(...eb.evalution)
+      evaluteList.push(...eb.evalution);
     }
   }
-  return evaluteList
-})
-console.log(randomWord.value)
+  return evaluteList;
+});
+console.log(randomWord.value);
 
 const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
-    setWord()
-    round.value++
-    setTimeout(() => (winScore.value += 1), 0)
-    console.log('you win')
-    gameIsEnd.value = gameStatus.win
-    showModal.value = true
+    setWord();
+    round.value++;
+    setTimeout(() => (winScore.value += 1), 0);
+    console.log('you win');
+    gameIsEnd.value = gameStatus.win;
+    showModal.value = true;
   } else if (
     word1.includes(inputWord.value.toLowerCase()) ||
     word2.includes(inputWord.value.toLowerCase())
   ) {
-    setWord()
-    round.value++
-    gameIsEnd.value = gameStatus.progress
-    console.log(`${round.value} Try Again`)
+    setWord();
+    round.value++;
+    gameIsEnd.value = gameStatus.progress;
+    console.log(`${round.value} Try Again`);
   } else {
-    gameIsEnd.value = gameStatus.error
-    console.log(`${round.value} don't have this word`)
+    gameIsEnd.value = gameStatus.error;
+    console.log(`${round.value} don't have this word`);
   }
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
-    gameIsEnd.value = gameStatus.fail
-    showModal.value = true
-    setTimeout(() => (loseScore.value += 1), 0)
-    console.log(loseScore.value)
+    gameIsEnd.value = gameStatus.fail;
+    showModal.value = true;
+    setTimeout(() => (loseScore.value += 1), 0);
+    console.log(loseScore.value);
   }
-  inputWord.value = ''
-}
+  inputWord.value = '';
+};
 
 const checkAnswer = () => {
-  const evaList = []
-  const correctList = [0, 0, 0, 0, 0, 0]
+  const evaList = [];
+  const correctList = [0, 0, 0, 0, 0, 0];
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-      evaList[inputIdx] = evalueteStatus.correct
-      hintstatus.value = evalueteStatus.correct
-      correctList[inputIdx] = 1
+      evaList[inputIdx] = evalueteStatus.correct;
+      hintstatus.value = evalueteStatus.correct;
+      correctList[inputIdx] = 1;
     }
   }
   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
@@ -114,45 +114,45 @@ const checkAnswer = () => {
         inputWord.value[inputIdx] === randomWord.value[randIdx] &&
         correctList[randIdx] == 0
       ) {
-        evaList[inputIdx] = evalueteStatus.present
-        hintstatus.value = evalueteStatus.present
-        break
+        evaList[inputIdx] = evalueteStatus.present;
+        hintstatus.value = evalueteStatus.present;
+        break;
       }
     }
     if (evaList[inputIdx] === undefined) {
-      evaList[inputIdx] = evalueteStatus.absent
+      evaList[inputIdx] = evalueteStatus.absent;
     }
   }
-  return evaList
-}
+  return evaList;
+};
 const setWord = () => {
-  board[round.value].bordState = inputWord.value
-  board[round.value].evalution = checkAnswer()
-}
+  board[round.value].bordState = inputWord.value;
+  board[round.value].evalution = checkAnswer();
+};
 
 const reset = () => {
   board.forEach((e) => {
-    e.bordState = ''
-    e.evalution = []
-  })
-  round.value = 0
-  gameIsEnd.value = gameStatus.progress
-  randomWord.value = word1[Math.floor(Math.random() * 2315)]
-  showModal.value = false
-  console.log(randomWord.value)
+    e.bordState = '';
+    e.evalution = [];
+  });
+  round.value = 0;
+  gameIsEnd.value = gameStatus.progress;
+  randomWord.value = word1[Math.floor(Math.random() * 2315)];
+  showModal.value = false;
+  console.log(randomWord.value);
   // console.log(board)
-}
+};
 
 const iconSunMoon = {
   sun: '/sun.png',
-  moon: '/moon.png'
-}
+  moon: '/moon.png',
+};
 
 const checkTheme = ref(
   localStorage.getItem('theme') == undefined
     ? true
     : localStorage.getItem('theme') == 'cupcake'
-)
+);
 </script>
 
 <template>
@@ -179,7 +179,7 @@ const checkTheme = ref(
     <div
       class="invisible group-hover:visible p-7 bg-base-300 w-32 absolute rounded-md duration-100 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center"
     >
-      <p>Win : {{ winScore }} Loses : {{loseScore}}</p>
+      <p>Win : {{ winScore }} Loses : {{ loseScore }}</p>
     </div>
   </div>
   <!-- Header -->
@@ -187,7 +187,11 @@ const checkTheme = ref(
     <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
       <h1
         class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text"
-       :class="{ 'bg-gradient-to-br from-fuchsia-400 to-fuchsia-900' : checkTheme,'bg-gradient-to-br from-amber-300 to-amber-700' : !checkTheme}">
+        :class="{
+          'bg-gradient-to-br from-fuchsia-400 to-fuchsia-900': checkTheme,
+          'bg-gradient-to-br from-amber-300 to-amber-700': !checkTheme,
+        }"
+      >
         WORDING
       </h1>
     </div>
@@ -214,7 +218,10 @@ const checkTheme = ref(
         type="text"
         placeholder="ENTER YOUR WORD !!"
         class="input bg-base-200 text-center font-medium tracking-widest uppercase mt-10"
-        :class="{'text-fuchsia-700' : checkTheme,'text-amber-500' : !checkTheme}"
+        :class="{
+          'text-fuchsia-700': checkTheme,
+          'text-amber-500': !checkTheme,
+        }"
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
@@ -246,7 +253,7 @@ const checkTheme = ref(
           'animation-pop-correct bg-green-300':
             evalutes[index] == evalueteStatus.correct,
           'animate-fade-in-down bg-amber-300':
-            evalutes[index] == evalueteStatus.present
+            evalutes[index] == evalueteStatus.present,
         }"
         v-for="(boards, index) in words"
       >
@@ -259,7 +266,7 @@ const checkTheme = ref(
   <div
     :class="{
       'animate-fade-in-down fixed z-10 overflow-y-auto top-5 w-full left-0': true,
-      hidden: showModal == false
+      hidden: showModal == false,
     }"
     id="modal"
   >
@@ -320,22 +327,12 @@ const checkTheme = ref(
     </div>
   </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+  <!-- Modal How to play -->
 
-<!-- Modal How to play -->
   <div
-=======
- <div
->>>>>>> 8f34da1d663919341e70c3ac54cf4b3e21b17907
-    :class="{
-      'animate-fade-in-down overflow-x-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
-=======
- <div
     :class="{
       'animate-fade-in-down overflow-x-auto fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
->>>>>>> eae63728264d71b5033d3cc336347deb3040e36b
-      hidden: howto === false
+      hidden: howto === false,
     }"
   >
     <div class="relative px-3 w-full max-w-md h-full md:h-auto">
@@ -362,11 +359,34 @@ const checkTheme = ref(
           </button>
         </div>
         <!-- Modal body -->
-        <h1 class="mb-5 -mt-5 uppercase font-bold" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">How to play</h1>
-        <div class="text-justify" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">
+        <h1
+          class="mb-5 -mt-5 uppercase font-bold"
+          :class="{
+            'text-fuchsia-700': checkTheme,
+            'text-amber-400': !checkTheme,
+          }"
+        >
+          How to play
+        </h1>
+        <div
+          class="text-justify"
+          :class="{
+            'text-fuchsia-700': checkTheme,
+            'text-amber-400': !checkTheme,
+          }"
+        >
           <div class="m-5">
             <p>
-              Guess the <span class="font-semibold" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">WORDING</span> in six tries.
+              Guess the
+              <span
+                class="font-semibold"
+                :class="{
+                  'text-fuchsia-700': checkTheme,
+                  'text-amber-400': !checkTheme,
+                }"
+                >WORDING</span
+              >
+              in six tries.
             </p>
             <p>
               Each guess must be a valid five-letter word. Hit the enter button
@@ -385,9 +405,7 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">i</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
-              <p class="y p-5 rounded bg-green-300">
-                y
-              </p>
+              <p class="y p-5 rounded bg-green-300">y</p>
             </div>
           </div>
 
@@ -403,9 +421,7 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">m</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">a</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">j</p>
-              <p class="o p-5 rounded bg-yellow-300">
-                o
-              </p>
+              <p class="o p-5 rounded bg-yellow-300">o</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">r</p>
             </div>
           </div>
@@ -455,39 +471,12 @@ const checkTheme = ref(
   animation: 1.2s linear popup;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 .y,
 .o,
 .arrow {
-<<<<<<< HEAD
-  animation: alternate-reverse popup;
-  animation-iteration-count: infinite;
-}
-
-.y {
-  animation-duration: 1.5s;
-}
-
-.o {
-  animation-duration: 1.5s;
-}
-
-.arrow {
-  animation-duration: 1.5s;
-}
-
-=======
-=======
-.y,.o,.arrow {
->>>>>>> 8f34da1d663919341e70c3ac54cf4b3e21b17907
-=======
-.y,.o,.arrow {
->>>>>>> eae63728264d71b5033d3cc336347deb3040e36b
   animation: 1.5s alternate-reverse popup;
   animation-iteration-count: infinite;
 }
-
 
 @keyframes popup {
   0% {
