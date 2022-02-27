@@ -73,7 +73,7 @@ const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
     setWord()
     round.value++
-    setTimeout(() => (winScore.value += 1), 1500)
+    setTimeout(() => (winScore.value += 1), 0)
     console.log('you win')
     gameIsEnd.value = gameStatus.win
     showModal.value = true
@@ -227,8 +227,9 @@ const checkTheme = ref(
   </div>
 
   <!-- Error Message -->
+
   <div
-    class="animate-fade-in-down fixed inset-x-0 mt-5"
+    class="animate-fade-out fixed inset-x-0 mt-5"
     v-show="gameIsEnd === gameStatus.error"
   >
     <p class="animate-bounce text-amber-600">Don't have this word!</p>
@@ -257,7 +258,7 @@ const checkTheme = ref(
   <!-- Modal Win & Lose -->
   <div
     :class="{
-      'animate-fade-in-down fixed z-10 overflow-y-auto top-1/3 w-full left-0': true,
+      'animate-fade-in-down fixed z-10 overflow-y-auto top-5 w-full left-0': true,
       hidden: showModal == false
     }"
     id="modal"
@@ -446,6 +447,7 @@ const checkTheme = ref(
   animation: 1.5s alternate-reverse popup;
   animation-iteration-count: infinite;
 }
+
 
 @keyframes popup {
   0% {
