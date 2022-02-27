@@ -56,14 +56,8 @@ const words = computed(() => {
       wordList.push(...wb.bordState.split(''))
     }
   }
-<<<<<<< HEAD
-  return wordList;
-});
-
-=======
   return wordList
 })
->>>>>>> runkung
 const evalutes = computed(() => {
   const evaluteList = []
   for (const eb of board) {
@@ -98,7 +92,7 @@ const checkInput = () => {
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail
     showModal.value = true
-    setTimeout(() => (loseScore.value += 1), 1500)
+    setTimeout(() => (loseScore.value += 1), 0)
     console.log(loseScore.value)
   }
   inputWord.value = ''
@@ -233,9 +227,8 @@ const checkTheme = ref(
   </div>
 
   <!-- Error Message -->
-
   <div
-    class="animate-fade-out fixed inset-x-0 mt-5"
+    class="animate-fade-in-down fixed inset-x-0 mt-5"
     v-show="gameIsEnd === gameStatus.error"
   >
     <p class="animate-bounce text-amber-600">Don't have this word!</p>
@@ -327,6 +320,7 @@ const checkTheme = ref(
   </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <!-- Modal How to play -->
   <div
@@ -335,6 +329,11 @@ const checkTheme = ref(
 >>>>>>> 8f34da1d663919341e70c3ac54cf4b3e21b17907
     :class="{
       'animate-fade-in-down overflow-x-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
+=======
+ <div
+    :class="{
+      'animate-fade-in-down overflow-x-auto fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
+>>>>>>> eae63728264d71b5033d3cc336347deb3040e36b
       hidden: howto === false
     }"
   >
@@ -456,6 +455,7 @@ const checkTheme = ref(
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .y,
 .o,
 .arrow {
@@ -480,11 +480,13 @@ const checkTheme = ref(
 =======
 .y,.o,.arrow {
 >>>>>>> 8f34da1d663919341e70c3ac54cf4b3e21b17907
+=======
+.y,.o,.arrow {
+>>>>>>> eae63728264d71b5033d3cc336347deb3040e36b
   animation: 1.5s alternate-reverse popup;
   animation-iteration-count: infinite;
 }
 
->>>>>>> runkung
 @keyframes popup {
   0% {
     transform: scale(1, 1) translateY(-10px);
