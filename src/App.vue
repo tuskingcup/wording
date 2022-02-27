@@ -104,26 +104,6 @@ const checkInput = () => {
   inputWord.value = ''
 }
 
-// const checkAnswer = () => {
-//   const evaList = [];
-//   for (let inputIdx = 0; inputIdx < inputWord.value.length; inputIdx++) {
-//     if (inputWord.value[inputIdx] === randomWord.value[inputIdx]) {
-//       evaList.push(evalueteStatus.correct);
-//     } else {
-//       for (const rand of randomWord.value) {
-//         if (inputWord.value[inputIdx] === rand) {
-//           evaList.push(evalueteStatus.present);
-//           break;
-//         }
-//       }
-//     }
-//     if (evaList.length === inputIdx) {
-//       evaList.push(evalueteStatus.absent);
-//     }
-//   }
-//   return evaList;
-// };
-
 const checkAnswer = () => {
   const evaList = []
   const correctList = [0, 0, 0, 0, 0, 0]
@@ -177,7 +157,7 @@ const iconSunMoon = {
 const checkTheme = ref(
   localStorage.getItem('theme') == undefined
     ? true
-    : localStorage.getItem('theme') == 'cmyk'
+    : localStorage.getItem('theme') == 'cupcake'
 )
 </script>
 
@@ -191,19 +171,19 @@ const checkTheme = ref(
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="absolute h-10 hover:scale-110"
-      fill="white"
+      fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
     >
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
-        stroke-width="2"
+        stroke-width="1"
         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
       />
     </svg>
     <div
-      class="invisible group-hover:visible p-7 bg-base-200 w-32 absolute rounded-md duration-100 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center text-white"
+      class="invisible group-hover:visible p-7 bg-base-300 w-32 absolute rounded-md duration-100 -inset-y-2 -inset-x-36 z-10 flex justify-center items-center"
     >
       <p>Win : {{ winScore }} Loses : {{loseScore}}</p>
     </div>
@@ -212,15 +192,15 @@ const checkTheme = ref(
   <div class="flex justify-center">
     <div class="animate-pulse font-serif font-bold text-6xl inset-x-0">
       <h1
-        class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-amber-700"
-      >
-        WORDLE
+        class="mt-10 mb-3 tracking-wider text-transparent bg-clip-text"
+       :class="{ 'bg-gradient-to-br from-fuchsia-400 to-fuchsia-900' : checkTheme,'bg-gradient-to-br from-amber-300 to-amber-700' : !checkTheme}">
+        WORDING
       </h1>
     </div>
     <div class="absolute top-10 right-12">
       <!-- <button type="button" @click="toggleTheme() "> -->
       <button
-        data-toggle-theme="cmyk,laxury"
+        data-toggle-theme="halloween,cupcake"
         data-act-class="ACTIVECLASS"
         class="animate-fade-in-down"
         @click="checkTheme = !checkTheme"
@@ -239,7 +219,8 @@ const checkTheme = ref(
       <input
         type="text"
         placeholder="ENTER YOUR WORD !!"
-        class="input bg-base-200 text-center text-amber-400 font-medium tracking-widest uppercase mt-10"
+        class="input bg-base-200 text-center font-medium tracking-widest uppercase mt-10"
+        :class="{'text-fuchsia-700' : checkTheme,'text-amber-500' : !checkTheme}"
         maxlength="5"
         v-model="inputWord"
         @keyup.enter="checkInput"
@@ -305,7 +286,7 @@ const checkTheme = ref(
         aria-modal="true"
         aria-labelledby="modal-headline"
       >
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
+        <div class="bg-base-300 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 font-sans">
           <div
             v-if="gameIsEnd === gameStatus.win"
             class="text-center uppercase"
@@ -323,7 +304,7 @@ const checkTheme = ref(
             Answer : <strong>{{ randomWord }}</strong>
           </p>
         </div>
-        <div class="bg-gray-200 px-4 py-3 text-right">
+        <div class="bg-base-100 px-4 py-3 text-right">
           <button @click="reset()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -345,21 +326,25 @@ const checkTheme = ref(
     </div>
   </div>
 
+<<<<<<< HEAD
 
 <!-- Modal How to play -->
   <div
+=======
+ <div
+>>>>>>> 8f34da1d663919341e70c3ac54cf4b3e21b17907
     :class="{
-      'animate-fade-in-down overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-20 h-modal sm:h-full ': true,
+      'animate-fade-in-down overflow-x-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-x-0 h-modal sm:h-full ': true,
       hidden: howto === false
     }"
   >
-    <div class="relative px-4 w-full max-w-md h-full md:h-auto">
+    <div class="relative px-3 w-full max-w-md h-full md:h-auto">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow p-5">
-        <div class="flex justify-end p-2">
+      <div class="relative bg-base-300 rounded-lg shadow p-5">
+        <div class="flex justify-end">
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+            class="text-gray-400 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
             @click="howto = !howto"
           >
             <svg
@@ -377,11 +362,11 @@ const checkTheme = ref(
           </button>
         </div>
         <!-- Modal body -->
-        <h1 class="mb-5 uppercase font-semibold">How to play</h1>
-        <div class="text-justify">
+        <h1 class="mb-5 -mt-5 uppercase font-bold" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">How to play</h1>
+        <div class="text-justify" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">
           <div class="m-5">
             <p>
-              Guess the <span class="font-semibold">WORDLE</span> in six tries.
+              Guess the <span class="font-semibold" :class="{ 'text-fuchsia-700' : checkTheme,'text-amber-400' : !checkTheme}">WORDING</span> in six tries.
             </p>
             <p>
               Each guess must be a valid five-letter word. Hit the enter button
@@ -400,7 +385,7 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">i</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">z</p>
-              <p class="y p-5 rounded bg-green-300 border-2 border-gray-300">
+              <p class="y p-5 rounded bg-green-300">
                 y
               </p>
             </div>
@@ -418,7 +403,7 @@ const checkTheme = ref(
               <p class="p-5 rounded bg-white border-2 border-gray-300">m</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">a</p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">j</p>
-              <p class="o p-5 rounded bg-yellow-300 border-2 border-gray-300">
+              <p class="o p-5 rounded bg-yellow-300">
                 o
               </p>
               <p class="p-5 rounded bg-white border-2 border-gray-300">r</p>
@@ -461,15 +446,16 @@ const checkTheme = ref(
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   text-align: center;
-  color: #2c3e50;
+  /* color: #2c3e50; */
 }
 
 .animation-pop-correct {
   animation: 1.2s linear popup;
 }
 
+<<<<<<< HEAD
 .y,
 .o,
 .arrow {
@@ -491,6 +477,9 @@ const checkTheme = ref(
 }
 
 =======
+=======
+.y,.o,.arrow {
+>>>>>>> 8f34da1d663919341e70c3ac54cf4b3e21b17907
   animation: 1.5s alternate-reverse popup;
   animation-iteration-count: infinite;
 }
