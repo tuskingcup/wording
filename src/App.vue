@@ -20,8 +20,6 @@ let winScore = ref(0);
 let loseScore = ref(0);
 const showModal = ref(false);
 
-const checkError = ref(false);
-
 const board = reactive([
   {
     bordState: '',
@@ -158,10 +156,10 @@ const checkTheme = ref(
 <template>
   <img
     src="/question-mark.png"
-    class="absolute top-10 left-12 h-9 hover:scale-110"
+    class="absolute top-10 left-12 h-9 hover:scale-110 cursor-pointer"
     @click="howto = !howto"
   />
-  <div class="group absolute top-10 right-36">
+  <div class="group absolute top-10 right-36 cursor-pointer">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="absolute h-10 hover:scale-110"
