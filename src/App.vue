@@ -73,7 +73,7 @@ const checkInput = () => {
   if (randomWord.value == inputWord.value.toLowerCase()) {
     setWord();
     round.value++;
-    setTimeout(() => (winScore.value += 1), 0);
+    setTimeout(() => (winScore.value += 1), 1000);
     console.log('you win');
     gameIsEnd.value = gameStatus.win;
     showModal.value = true;
@@ -92,7 +92,7 @@ const checkInput = () => {
   if (round.value == 6 && gameIsEnd.value === gameStatus.progress) {
     gameIsEnd.value = gameStatus.fail;
     showModal.value = true;
-    setTimeout(() => (loseScore.value += 1), 0);
+    setTimeout(() => (loseScore.value += 1), 1000);
     console.log(loseScore.value);
   }
   inputWord.value = '';
